@@ -1,0 +1,128 @@
+{
+  "users": [
+    {
+      "id": "user-001",
+      "name": "Alex Johnson",
+      "email": "alex@iastate.edu",
+      "passwordHash": "e1d9cb5e4fe26ad216eb4ffedd6bbf68ff8170024e087ec8d92cc4a49770e96bb8a5fbaef4a67aab1b215da5a3185535268d3c31032d4c9b1dd172ff33e457b5",
+      "profile": {
+        "school": "Iowa State University",
+        "major": "Computer Science",
+        "currentYear": 2,
+        "currentSemester": "Spring",
+        "completedCourses": [
+          "COM S 227",
+          "COM S 228",
+          "MATH 165",
+          "MATH 166",
+          "ENGL 150",
+          "COM S 311",
+          "COM S 352",
+          "MATH 307",
+          "SE 319"
+        ]
+      },
+      "assignments": [
+        {
+          "id": 1,
+          "title": "Data Structures Problem Set 4",
+          "course": "COM S 311",
+          "dueDate": "2026-04-15",
+          "dueTime": "11:59 PM",
+          "type": "homework",
+          "completed": false
+        },
+        {
+          "id": 2,
+          "title": "Midterm Exam",
+          "course": "COM S 363",
+          "dueDate": "2026-04-17",
+          "dueTime": "2:00 PM",
+          "type": "exam",
+          "completed": false
+        },
+        {
+          "id": 3,
+          "title": "Lab Report",
+          "course": "BIOL 212",
+          "dueDate": "2026-04-18",
+          "dueTime": "5:00 PM",
+          "type": "lab",
+          "completed": false
+        },
+        {
+          "id": 4,
+          "title": "Team Project Milestone 2",
+          "course": "COM S 417",
+          "dueDate": "2026-04-22",
+          "dueTime": "11:59 PM",
+          "type": "project",
+          "completed": false
+        },
+        {
+          "id": 5,
+          "title": "Weekly Quiz 9",
+          "course": "COM S 321",
+          "dueDate": "2026-04-14",
+          "dueTime": "9:00 AM",
+          "type": "quiz",
+          "completed": true
+        }
+      ],
+      "events": [
+        {
+          "id": 1,
+          "title": "Spring Career Fair",
+          "date": "2026-04-16",
+          "time": "10:00 AM - 3:00 PM",
+          "location": "Hilton Coliseum",
+          "category": "career",
+          "description": "Meet recruiters from 150+ companies. Business casual required."
+        },
+        {
+          "id": 2,
+          "title": "CS Club Hackathon",
+          "date": "2026-04-19",
+          "time": "6:00 PM",
+          "location": "2034 Coover Hall",
+          "category": "club",
+          "description": "24-hour hackathon. Free food and prizes."
+        },
+        {
+          "id": 3,
+          "title": "ACM Guest Lecture: ML in Production",
+          "date": "2026-04-23",
+          "time": "5:30 PM",
+          "location": "101 Marston Hall",
+          "category": "academic",
+          "description": "Speaker from Google DeepMind."
+        }
+      ],
+      "icsUrl": "",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "user-1775795838999",
+      "name": "Heeryun Cho",
+      "email": "heeryun@iastate.edu",
+      "passwordHash": "f83f75f4260ebd42c26888399d250ebdeb6e46b376a2f20c70c1b54a41c69aad1b50a681a91cd9f7f1aaeeb65ac30786d5628bfcf38bb58136a639ae374434b0",
+      "profile": {
+        "school": "Iowa State University",
+        "major": "Data Science",
+        "currentYear": 1,
+        "currentSemester": "Spring",
+        "completedCourses": [
+          "COMS 1270",
+          "MATH 1650",
+          "ECON 1010",
+          "MUSIC 1020",
+          "ENGL 1010C"
+        ]
+      },
+      "assignments": [],
+      "events": [],
+      "createdAt": "2026-04-10T04:37:19.027Z",
+      "icsUrl": "https://canvas.iastate.edu/feeds/calendars/user_4Mqk3Fkht0dwRwKn2c4j8RiBGk1SIxRBiuQJMtX1.ics"
+    }
+  ]
+}
