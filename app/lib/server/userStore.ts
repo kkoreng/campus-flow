@@ -91,6 +91,7 @@ export async function registerAndPersist(input: {
       currentYear: 1,
       currentSemester: 'Fall',
       completedCourses: [],
+      currentCourses: [],
     },
     assignments: [],
     events: [],
@@ -105,6 +106,21 @@ export async function registerAndPersist(input: {
   }
 
   return { user }
+}
+
+export async function saveAssignments(
+  userId: string,
+  assignments: Assignment[]
+): Promise<DbUser | null> {
+  if (USE_MONGO) {
+    const db = await getDb()
+    return db.collection<DbUser>('users').findOneAndUpdate(
+      { id: userId },
+      { $set: { assignments } },
+      { returnDocument: 'after', projection: { _id: 0 } }
+    )
+  }
+  return jsonUpdate(userId, { assignments })
 }
 
 export async function saveUserSnapshot(

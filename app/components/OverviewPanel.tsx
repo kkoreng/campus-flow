@@ -1,44 +1,47 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import type { Assignment, CampusEvent } from '../lib/types'
-
-function daysUntil(date: string) {
-  const today = new Date(); today.setHours(0, 0, 0, 0)
-  const d = new Date(date); d.setHours(0, 0, 0, 0)
-  return Math.ceil((d.getTime() - today.getTime()) / 86400000)
-}
-
-const TYPE_META: Record<string, { label: string; cls: string }> = {
-  homework: { label: 'HW',      cls: 'text-blue-500 dark:text-blue-400' },
-  exam:     { label: 'Exam',    cls: 'text-rose-500 dark:text-rose-400' },
-  project:  { label: 'Project', cls: 'text-violet-500 dark:text-violet-400' },
-  quiz:     { label: 'Quiz',    cls: 'text-amber-500 dark:text-amber-400' },
-  lab:      { label: 'Lab',     cls: 'text-emerald-500 dark:text-emerald-400' },
-  other:    { label: 'Other',   cls: 'text-slate-400 dark:text-slate-500' },
-}
-
-const CAT_DOT: Record<string, string> = {
-  academic: 'bg-indigo-500', career: 'bg-violet-500', social: 'bg-amber-400',
-  sports: 'bg-emerald-500', club: 'bg-sky-500', other: 'bg-slate-400',
-}
-
-const GROUPS = [
-  { key: 'overdue',  label: 'Overdue',    urgency: 'rose',  check: (d: number) => d < 0 },
-  { key: 'today',    label: 'Today',      urgency: 'rose',  check: (d: number) => d === 0 },
-  { key: 'tomorrow', label: 'Tomorrow',   urgency: 'amber', check: (d: number) => d === 1 },
-  { key: 'thisweek', label: 'This week',  urgency: 'slate', check: (d: number) => d >= 2 && d <= 7 },
-  { key: 'later',    label: 'Later',      urgency: 'slate', check: (d: number) => d > 7 },
-]
+import { useCallback, useEffect, useRef, useState } from 'react'
+import type { Assignment, UserProfile } from '../lib/types'
+import type { AnalyzeResponse } from '../api/analyze/route'
 
 interface Props {
   userId: string
+  profile: UserProfile
+  refreshTrigger: number
   onNavigate: (tab: 'assignments' | 'event') => void
 }
 
-export default function OverviewPanel({ userId, onNavigate }: Props) {
+const CACHE_KEY = (uid: string) => `campusflow_analysis_${uid}`
+const CACHE_TTL = 4 * 60 * 60 * 1000 // 4 hours
+
+interface CacheEntry { data: AnalyzeResponse; assignmentHash: string; ts: number }
+
+function loadCache(userId: string): CacheEntry | null {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY(userId))
+    if (!raw) return null
+    const entry = JSON.parse(raw) as CacheEntry
+    if (Date.now() - entry.ts > CACHE_TTL) return null
+    return entry
+  } catch { return null }
+}
+
+function saveCache(userId: string, data: AnalyzeResponse, assignmentHash: string) {
+  try {
+    localStorage.setItem(CACHE_KEY(userId), JSON.stringify({ data, ts: Date.now(), assignmentHash }))
+  } catch { /* ignore */ }
+}
+
+function hashContext(assignments: Assignment[], userNote?: string): string {
+  const aHash = assignments.map(a => `${a.id}:${a.completed}:${a.dueDate}`).sort().join('|')
+  return `${aHash}||note:${userNote ?? ''}`
+}
+
+export default function OverviewPanel({ userId, profile, refreshTrigger, onNavigate }: Props) {
   const [assignments, setAssignments] = useState<Assignment[]>([])
-  const [events, setEvents] = useState<CampusEvent[]>([])
+  const [analysis, setAnalysis] = useState<AnalyzeResponse | null>(null)
+  const [analyzing, setAnalyzing] = useState(false)
+  const [analysisError, setAnalysisError] = useState('')
 
   useEffect(() => {
     let cancelled = false
@@ -47,153 +50,222 @@ export default function OverviewPanel({ userId, onNavigate }: Props) {
       if (!res.ok || cancelled) return
       const data = await res.json()
       if (cancelled) return
-      setAssignments(data.user.assignments ?? [])
-      setEvents(data.user.events ?? [])
+      const loaded: Assignment[] = data.user.assignments ?? []
+
+      // Try cache first — only re-analyze if assignments changed or cache expired
+      const hash = hashContext(loaded, profile.userNote)
+      const cached = loadCache(userId)
+      if (cached && cached.assignmentHash === hash) {
+        setAssignments(loaded)
+        setAnalysis(cached.data)
+        return
+      }
+
+      setAssignments(loaded)
     }
     void load()
     return () => { cancelled = true }
-  }, [userId])
+  }, [userId, profile.userNote])
 
-  function toggleDone(id: number) {
-    setAssignments(prev => prev.map(a => a.id === id ? { ...a, completed: !a.completed } : a))
-  }
+  const runAnalysis = useCallback(async (allAssignments: Assignment[], force = false) => {
+    if (!force) {
+      const hash = hashContext(allAssignments, profile.userNote)
+      const cached = loadCache(userId)
+      if (cached && cached.assignmentHash === hash) {
+        setAnalysis(cached.data)
+        return
+      }
+    }
+    setAnalyzing(true)
+    setAnalysisError('')
+    try {
+      const res = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile, assignments: allAssignments }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Analysis failed.')
+      setAnalysis(data as AnalyzeResponse)
+      saveCache(userId, data, hashContext(allAssignments, profile.userNote))
+    } catch (err) {
+      setAnalysisError(err instanceof Error ? err.message : 'Could not run analysis.')
+    } finally {
+      setAnalyzing(false)
+    }
+  }, [profile, userId])
+
+  // Initial analysis on first load
+  useEffect(() => {
+    if (assignments.length > 0) void runAnalysis(assignments)
+  }, [assignments, runAnalysis])
+
+  // Re-fetch + re-analyze when assignments change externally (add/delete/toggle)
+  const isFirstRender = useRef(true)
+  useEffect(() => {
+    if (isFirstRender.current) { isFirstRender.current = false; return }
+    let cancelled = false
+    async function reload() {
+      const res = await fetch(`/api/users/${userId}`, { cache: 'no-store' })
+      if (!res.ok || cancelled) return
+      const data = await res.json()
+      if (cancelled) return
+      const loaded: Assignment[] = data.user.assignments ?? []
+      setAssignments(loaded)
+      void runAnalysis(loaded)
+    }
+    void reload()
+    return () => { cancelled = true }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshTrigger])
 
   const now = new Date()
-  const today = now.toISOString().split('T')[0]
   const hour = now.getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
 
-  const pending = assignments.filter(a => !a.completed)
-  const overdueCount = pending.filter(a => a.dueDate < today).length
-  const todayCount = pending.filter(a => a.dueDate === today).length
-  const todayEvents = events.filter(e => e.date === today)
-  const tomorrowEvents = events.filter(e => daysUntil(e.date) === 1)
-  const upcomingEvents = todayEvents.length > 0 ? todayEvents : tomorrowEvents
-  const eventLabel = todayEvents.length > 0 ? 'Today' : 'Tomorrow'
-
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
 
-      {/* ── Header ── */}
+      {/* ── Greeting + date ── */}
       <div className="flex items-end justify-between">
         <div>
-          <h2 className="text-3xl font-semibold tracking-[-0.04em] text-slate-900 dark:text-white">
-            {greeting}
-          </h2>
+          <h2 className="text-3xl font-semibold tracking-[-0.04em] text-slate-900 dark:text-white">{greeting}</h2>
           <p className="mt-1 text-sm text-slate-400 dark:text-slate-500">
             {now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
           </p>
         </div>
-        {(overdueCount > 0 || todayCount > 0) && (
-          <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-            overdueCount > 0
-              ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-500 ring-1 ring-rose-200 dark:ring-rose-900'
-              : 'bg-amber-50 dark:bg-amber-950/40 text-amber-500 ring-1 ring-amber-200 dark:ring-amber-900'
-          }`}>
-            {overdueCount > 0 ? `${overdueCount} overdue` : `${todayCount} due today`}
-          </span>
-        )}
+        <button
+          onClick={() => runAnalysis(assignments, true)}
+          disabled={analyzing}
+          className="text-[11px] text-slate-400 hover:text-blue-500 transition-colors disabled:opacity-40 shrink-0"
+        >
+          {analyzing ? 'Analyzing…' : 'Refresh ↺'}
+        </button>
       </div>
 
-      {/* ── Upcoming events strip ── */}
-      {upcomingEvents.length > 0 && (
-        <button
-          onClick={() => onNavigate('event')}
-          className="w-full text-left group"
-        >
-          <div className="flex items-center gap-3 mb-3">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-indigo-500 dark:text-indigo-400">{eventLabel}</span>
-            <div className="flex-1 h-px bg-indigo-100 dark:bg-indigo-900/50" />
-            <span className="text-[11px] text-slate-400 group-hover:text-indigo-500 transition-colors">View all →</span>
-          </div>
+      {/* Loading skeleton */}
+      {analyzing && (
+        <div className="space-y-4">
+          <div className="h-36 rounded-lg bg-slate-100 dark:bg-slate-800/60 animate-pulse" />
           <div className="space-y-2">
-            {upcomingEvents.slice(0, 3).map(ev => (
-              <div key={ev.id} className="flex items-center gap-3">
-                <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${CAT_DOT[ev.category] ?? 'bg-slate-400'}`} />
-                <span className="text-sm text-slate-700 dark:text-slate-300 truncate">{ev.title}</span>
-                {ev.time && <span className="ml-auto text-xs text-slate-400 shrink-0">{ev.time}</span>}
-              </div>
-            ))}
+            {[1,2,3].map(i => <div key={i} className="h-12 rounded bg-slate-100 dark:bg-slate-800/60 animate-pulse" />)}
           </div>
-        </button>
+        </div>
       )}
 
-      {/* ── Assignments ── */}
-      <div>
-        <div className="flex items-center gap-3 mb-6">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">To do</span>
-          <div className="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
-          <button onClick={() => onNavigate('assignments')} className="text-[11px] text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">
-            All assignments →
-          </button>
-        </div>
+      {!analyzing && analysisError && (
+        <p className="text-sm text-rose-500">{analysisError}</p>
+      )}
 
-        {pending.length === 0 ? (
-          <div className="py-16 text-center">
-            <p className="text-3xl mb-3">🎉</p>
-            <p className="text-sm font-medium text-slate-600 dark:text-slate-400">All clear</p>
-            <p className="text-xs text-slate-400 dark:text-slate-600 mt-1">No pending assignments</p>
-          </div>
-        ) : (
-          <div className="space-y-8">
-            {GROUPS.map(group => {
-              const items = pending
-                .filter(a => group.check(daysUntil(a.dueDate)))
-                .sort((a, b) => a.dueDate.localeCompare(b.dueDate))
-              if (items.length === 0) return null
+      {!analyzing && !analysis && !analysisError && (
+        <p className="text-sm text-slate-400 dark:text-slate-500">Add assignments to get your AI plan.</p>
+      )}
 
-              const labelCls =
-                group.urgency === 'rose'  ? 'text-rose-500' :
-                group.urgency === 'amber' ? 'text-amber-500' :
-                'text-slate-400 dark:text-slate-500'
+      {!analyzing && analysis && (
+        <div className="space-y-6">
 
-              return (
-                <div key={group.key}>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-xs font-semibold ${labelCls}`}>{group.label}</span>
-                    <span className="text-xs text-slate-300 dark:text-slate-700">{items.length}</span>
-                  </div>
+          {/* Focus Now — hero (top) */}
+          {analysis.focusNow && (
+            <div className="bg-slate-900 dark:bg-white rounded-xl p-6">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-blue-400 dark:text-blue-600 mb-4">Focus now</p>
+              <p className="text-2xl font-semibold tracking-[-0.03em] text-white dark:text-slate-900 leading-snug">
+                {analysis.focusNow.title}
+              </p>
+              <p className="mt-1.5 text-sm text-slate-400 dark:text-slate-500">{analysis.focusNow.course}</p>
 
-                  <div className="divide-y divide-slate-100 dark:divide-slate-800/80">
-                    {items.map(a => {
-                      const meta = TYPE_META[a.type] ?? TYPE_META.other
-                      const days = daysUntil(a.dueDate)
-                      return (
-                        <div key={a.id} className="flex items-center gap-3 py-3 group/row hover:bg-slate-50 dark:hover:bg-slate-900/40 -mx-3 px-3 rounded-xl transition-colors">
-                          {/* Checkbox */}
-                          <button
-                            onClick={() => toggleDone(a.id)}
-                            className="w-4 h-4 rounded-full border-2 border-slate-300 dark:border-slate-600 hover:border-indigo-400 dark:hover:border-indigo-500 shrink-0 transition-colors"
-                          />
-
-                          {/* Text */}
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">{a.title}</p>
-                            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{a.course}{a.dueTime ? ` · ${a.dueTime}` : ''}</p>
-                          </div>
-
-                          {/* Type */}
-                          <span className={`text-xs font-semibold shrink-0 ${meta.cls}`}>{meta.label}</span>
-
-                          {/* Days */}
-                          <span className={`text-xs tabular-nums w-16 text-right shrink-0 font-medium ${
-                            days < 0  ? 'text-rose-500' :
-                            days === 0 ? 'text-rose-500' :
-                            days === 1 ? 'text-amber-500' :
-                            'text-slate-400 dark:text-slate-500'
-                          }`}>
-                            {days < 0 ? `${Math.abs(days)}d ago` : days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : `in ${days}d`}
-                          </span>
-                        </div>
-                      )
-                    })}
-                  </div>
+              <div className="mt-5 flex items-center gap-5">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400 mb-1">Deadline</p>
+                  <p className="text-sm font-semibold text-rose-400 dark:text-rose-500">{analysis.focusNow.deadline}</p>
                 </div>
-              )
-            })}
-          </div>
-        )}
-      </div>
+                <div className="w-px h-8 bg-slate-700 dark:bg-slate-300" />
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400 mb-1">Est. time</p>
+                  <p className="text-sm font-semibold text-white dark:text-slate-900">{analysis.focusNow.timeEstimate}</p>
+                </div>
+              </div>
+
+              {analysis.focusNow.nextUp && (
+                <div className="mt-5 pt-4 border-t border-slate-700/60 dark:border-slate-300/40">
+                  <p className="text-xs text-slate-400 dark:text-slate-500">
+                    <span className="text-slate-500 dark:text-slate-400">After this →</span> {analysis.focusNow.nextUp}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* AI Comment */}
+          {analysis.summary && (
+            <div className="rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/30 px-4 py-3 flex items-start gap-3">
+              <span className="mt-0.5 shrink-0 rounded-md bg-blue-500/10 dark:bg-blue-500/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-blue-500 dark:text-blue-400">AI Comment</span>
+              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{analysis.summary}</p>
+            </div>
+          )}
+
+          {/* Up next + Keep an eye on — side by side */}
+          {(analysis.todayQueue.length > 0 || analysis.watchOut.length > 0) && (
+            <div className="grid grid-cols-2 gap-4">
+
+              {/* Up next */}
+              <div className="border border-blue-200 dark:border-blue-900/50 rounded-xl p-4 bg-blue-50/50 dark:bg-blue-950/10">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-blue-500 dark:text-blue-400 mb-3">Up next</p>
+                {analysis.todayQueue.length > 0 ? (
+                  <div className="divide-y divide-blue-100 dark:divide-blue-900/30">
+                    {analysis.todayQueue.map((item, i) => (
+                      <div key={i} className="py-3 first:pt-0 last:pb-0">
+                        <div className="flex items-start gap-2">
+                          <span className="text-[10px] text-slate-300 dark:text-slate-700 font-mono mt-0.5 shrink-0">{i + 1}</span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-slate-800 dark:text-slate-200 leading-snug">{item.title}</p>
+                            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{item.course}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{item.deadline}</span>
+                              <span className="text-xs text-slate-300 dark:text-slate-700">·</span>
+                              <span className="text-xs text-slate-400 dark:text-slate-500">{item.timeEstimate}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-slate-400 dark:text-slate-600">Nothing else queued.</p>
+                )}
+              </div>
+
+              {/* Keep an eye on */}
+              <div className="border border-amber-200 dark:border-amber-900/50 rounded-xl p-4 bg-amber-50/50 dark:bg-amber-950/10">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-500 mb-3">Keep an eye on</p>
+                {analysis.watchOut.length > 0 ? (
+                  <div className="divide-y divide-amber-100 dark:divide-amber-900/30">
+                    {analysis.watchOut.map((item, i) => (
+                      <div key={i} className="py-3 first:pt-0 last:pb-0">
+                        <p className="text-sm font-medium text-slate-800 dark:text-slate-200 leading-snug">{item.title}</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{item.course} · {item.dueDate}</p>
+                        {item.note && <p className="text-xs text-amber-600 dark:text-amber-400 mt-1.5">{item.note}</p>}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-slate-400 dark:text-slate-600">Nothing to watch.</p>
+                )}
+              </div>
+
+            </div>
+          )}
+
+        </div>
+      )}
+
+      {/* ── Quick link to assignments ── */}
+      <button
+        onClick={() => onNavigate('assignments')}
+        className="w-full text-left text-xs text-slate-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+      >
+        View all assignments →
+      </button>
+
     </div>
   )
 }

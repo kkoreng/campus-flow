@@ -26,6 +26,12 @@ export interface CampusEvent {
 
 // ── Academic Profile ─────────────────────────────────────────────
 export type Season = 'Fall' | 'Spring' | 'Summer'
+export type CourseDifficulty = 'easy' | 'medium' | 'hard'
+
+export interface CurrentCourse {
+  name: string
+  difficulty: CourseDifficulty
+}
 
 export interface UserProfile {
   school: string
@@ -33,4 +39,6 @@ export interface UserProfile {
   currentYear: number
   currentSemester: Season
   completedCourses: string[]
+  currentCourses: CurrentCourse[]
+  userNote?: string
 }

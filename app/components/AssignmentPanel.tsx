@@ -23,14 +23,15 @@ function daysUntil(date: string) {
 
 function DueBadge({ dueDate }: { dueDate: string }) {
   const days = daysUntil(dueDate)
-  if (days < 0) return <span className="text-[10px] font-medium text-rose-500">Overdue</span>
   if (days === 0) return <span className="text-[10px] font-semibold text-rose-500">Today</span>
   if (days === 1) return <span className="text-[10px] font-medium text-amber-500">Tomorrow</span>
-  return <span className="text-[10px] text-slate-400 dark:text-slate-500">{days}d left</span>
+  if (days > 0) return <span className="text-[10px] text-slate-400 dark:text-slate-500">{days}d left</span>
+  return null
 }
 
-export default function AssignmentPanel({ userId }: { userId: string }) {
+export default function AssignmentPanel({ userId, onAssignmentsChange }: { userId: string; onAssignmentsChange?: () => void }) {
   const [assignments, setAssignments] = useState<Assignment[]>([])
+  const [loaded, setLoaded] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [filter, setFilter] = useState<'all' | 'pending' | 'done'>('all')
   const [autoSyncUrl, setAutoSyncUrl] = useState<string | null>(null)
@@ -60,6 +61,7 @@ export default function AssignmentPanel({ userId }: { userId: string }) {
       if (cancelled) return
       setAssignments(data.user.assignments ?? [])
       setAutoSyncUrl(data.user.icsUrl ?? null)
+      setLoaded(true)
       setIcsUrl(data.user.icsUrl ?? '')
     }
 
@@ -132,6 +134,16 @@ export default function AssignmentPanel({ userId }: { userId: string }) {
     await syncAssignmentsFromIcs(icsUrl, 'manual')
   }
 
+  // Auto-persist whenever assignments change (after initial load)
+  useEffect(() => {
+    if (!loaded) return
+    void fetch(`/api/users/${userId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ assignments }),
+    }).then(() => onAssignmentsChange?.())
+  }, [assignments, loaded, userId, onAssignmentsChange])
+
   useEffect(() => {
     if (!autoSyncUrl) return
 
@@ -170,15 +182,22 @@ export default function AssignmentPanel({ userId }: { userId: string }) {
 
   const today = new Date().toISOString().split('T')[0]
 
-  const filtered = assignments
+  // Active = upcoming (due today or later, not completed) + early-completed
+  // Past = due date already passed — auto-archived regardless of completed flag
+  const activeAssignments = assignments.filter(a => a.dueDate >= today)
+  const pastAssignments = assignments.filter(a => a.dueDate < today)
+
+  const filtered = activeAssignments
     .filter(a => filter === 'all' ? true : filter === 'pending' ? !a.completed : a.completed)
     .sort((a, b) => {
       if (a.completed !== b.completed) return a.completed ? 1 : -1
       return a.dueDate.localeCompare(b.dueDate)
     })
 
-  const pending = assignments.filter(a => !a.completed).length
-  const done = assignments.filter(a => a.completed).length
+  const pending = activeAssignments.filter(a => !a.completed).length
+  const done = activeAssignments.filter(a => a.completed).length
+
+  const [showPast, setShowPast] = useState(false)
 
   // Group by date
   const groups: Record<string, Assignment[]> = {}
@@ -192,7 +211,6 @@ export default function AssignmentPanel({ userId }: { userId: string }) {
     const label = new Date(d + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
     if (days === 0) return `Today — ${label.split(', ').slice(1).join(', ')}`
     if (days === 1) return `Tomorrow — ${label.split(', ').slice(1).join(', ')}`
-    if (days < 0) return `Overdue — ${label}`
     return label
   }
 
@@ -335,7 +353,7 @@ export default function AssignmentPanel({ userId }: { userId: string }) {
         </div>
       )}
 
-      {/* Assignment groups */}
+      {/* Active assignment groups */}
       {filtered.length === 0 ? (
         <div className="rounded-[24px] border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-950/50 py-16 text-center">
           <p className="text-sm text-slate-400 dark:text-slate-600">No assignments here</p>
@@ -343,28 +361,19 @@ export default function AssignmentPanel({ userId }: { userId: string }) {
       ) : (
         <div className="space-y-3">
           {Object.entries(groups)
-            .sort(([a], [b]) => {
-              const da = daysUntil(a), db = daysUntil(b)
-              // overdue at bottom, then sorted by days
-              if (da < 0 && db >= 0) return 1
-              if (db < 0 && da >= 0) return -1
-              return da - db
-            })
+            .sort(([a], [b]) => daysUntil(a) - daysUntil(b))
             .map(([date, items]) => (
               <div key={date} className="rounded-[24px] border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/50 overflow-hidden">
-                {/* Group header */}
                 <div className="px-4 py-2.5 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                   <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">{formatGroupDate(date)}</span>
                   <span className="text-[10px] text-slate-400 dark:text-slate-600">{items.length} item{items.length !== 1 ? 's' : ''}</span>
                 </div>
-                {/* Items */}
                 <div className="divide-y divide-slate-100 dark:divide-slate-800">
                   {items.map(a => (
                     <div key={a.id} className="group flex items-center gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                      {/* Checkbox */}
                       <button
                         onClick={() => toggle(a.id)}
-                        className={`w-4.5 h-4.5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+                        className={`rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
                           a.completed
                             ? 'bg-emerald-500 border-emerald-500 text-white'
                             : 'border-slate-300 dark:border-slate-600 hover:border-indigo-400 dark:hover:border-indigo-500'
@@ -377,8 +386,6 @@ export default function AssignmentPanel({ userId }: { userId: string }) {
                           </svg>
                         )}
                       </button>
-
-                      {/* Content */}
                       <div className="flex-1 min-w-0">
                         <p className={`text-sm font-medium truncate ${a.completed ? 'line-through text-slate-400 dark:text-slate-600' : 'text-slate-800 dark:text-slate-200'}`}>
                           {a.title}
@@ -388,8 +395,6 @@ export default function AssignmentPanel({ userId }: { userId: string }) {
                           {a.dueTime && <span className="text-xs text-slate-400 dark:text-slate-600">· {a.dueTime}</span>}
                         </div>
                       </div>
-
-                      {/* Right side */}
                       <div className="flex items-center gap-2 shrink-0">
                         {!a.completed && <DueBadge dueDate={a.dueDate} />}
                         <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md ${TYPE_META[a.type].cls}`}>
@@ -409,6 +414,59 @@ export default function AssignmentPanel({ userId }: { userId: string }) {
                 </div>
               </div>
             ))}
+        </div>
+      )}
+
+      {/* Past assignments — auto-archived */}
+      {pastAssignments.length > 0 && (
+        <div>
+          <button
+            onClick={() => setShowPast(v => !v)}
+            className="flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+              className={`transition-transform ${showPast ? 'rotate-90' : ''}`}>
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+            Past ({pastAssignments.length}) — auto-archived
+          </button>
+
+          {showPast && (
+            <div className="mt-3 rounded-[24px] border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 overflow-hidden">
+              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+                {pastAssignments
+                  .sort((a, b) => b.dueDate.localeCompare(a.dueDate))
+                  .map(a => (
+                    <div key={a.id} className="group flex items-center gap-3 px-4 py-3">
+                      <div className="w-[18px] h-[18px] rounded-full border border-slate-200 dark:border-slate-700 shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-slate-400 dark:text-slate-600 truncate">{a.title}</p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-xs font-mono text-slate-300 dark:text-slate-700">{a.course}</span>
+                          <span className="text-xs text-slate-300 dark:text-slate-700">·</span>
+                          <span className="text-xs text-slate-300 dark:text-slate-700">
+                            {new Date(a.dueDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md opacity-50 ${TYPE_META[a.type].cls}`}>
+                          {TYPE_META[a.type].label}
+                        </span>
+                        <button
+                          onClick={() => remove(a.id)}
+                          className="opacity-0 group-hover:opacity-100 w-6 h-6 flex items-center justify-center rounded-md text-slate-300 dark:text-slate-600 hover:text-rose-500 dark:hover:text-rose-400 transition-all"
+                        >
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round">
+                            <path d="M18 6L6 18M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -111,8 +111,7 @@ export default function RegisterPage() {
       return
     }
 
-    setFlashMessage('Account created. Complete your profile to unlock planning and sync.')
-    router.replace('/')
+    router.replace('/onboarding')
   }
 
   if (loading) return null

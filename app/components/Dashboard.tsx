@@ -11,9 +11,10 @@ import OverviewPanel from './OverviewPanel'
 import AssignmentPanel from './AssignmentPanel'
 import EventPanel from './EventPanel'
 import ProfileSettingsPanel from './ProfileSettingsPanel'
+import InsightsPanel from './InsightsPanel'
 import LogoIcon from './LogoIcon'
 
-type Tab = 'dashboard' | 'assignments' | 'events' | 'settings'
+type Tab = 'dashboard' | 'assignments' | 'events' | 'insights' | 'settings'
 
 const TABS: { id: Tab; label: string; icon: ReactElement }[] = [
   {
@@ -43,6 +44,15 @@ const TABS: { id: Tab; label: string; icon: ReactElement }[] = [
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
         <rect x="3" y="5" width="18" height="16" rx="2" />
         <path strokeLinecap="round" d="M16 3v4M8 3v4M3 10h18" />
+      </svg>
+    ),
+  },
+  {
+    id: 'insights',
+    label: 'Insights',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
       </svg>
     ),
   },
@@ -84,6 +94,58 @@ function MoonIcon() {
   )
 }
 
+function UserNoteCard({ userId, initialNote, onSave }: { userId: string; initialNote: string; onSave: (note: string) => void }) {
+  const [note, setNote] = useState(initialNote)
+  const [saving, setSaving] = useState(false)
+  const [status, setStatus] = useState('')
+
+  async function handleSave() {
+    setSaving(true)
+    setStatus('')
+    try {
+      const res = await fetch(`/api/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile: { userNote: note.trim() || undefined } }),
+      })
+      if (!res.ok) throw new Error()
+      const data = await res.json()
+      onSave(data.user.profile?.userNote ?? '')
+      setStatus('Saved.')
+    } catch {
+      setStatus('Failed to save.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div className="rounded-[24px] border border-slate-200/80 bg-white/90 p-5 shadow-[0_14px_36px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:bg-slate-950/55 sm:p-6">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">User Note</p>
+      <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
+        Tell the AI about yourself — study habits, goals, constraints, strengths. Used for personalized recommendations.
+      </p>
+      <textarea
+        value={note}
+        onChange={e => { setNote(e.target.value); setStatus('') }}
+        placeholder="e.g. I tend to procrastinate on writing assignments. I work best in the mornings. I'm aiming for grad school in ML. I have part-time work on weekends."
+        rows={5}
+        className="mt-3 w-full rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+      />
+      <div className="mt-3 flex items-center gap-3">
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="rounded-md bg-slate-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-slate-900 disabled:opacity-60"
+        >
+          {saving ? 'Saving…' : 'Save'}
+        </button>
+        {status && <p className={`text-xs ${status === 'Saved.' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500'}`}>{status}</p>}
+      </div>
+    </div>
+  )
+}
+
 function getInitialFlashMessage() {
   if (typeof window === 'undefined') return null
   return consumeFlashMessage()
@@ -96,6 +158,7 @@ export default function Dashboard() {
 
   const [tab, setTab] = useState<Tab>('dashboard')
   const [profileVersion, setProfileVersion] = useState(0)
+  const [analysisVersion, setAnalysisVersion] = useState(0)
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [icsUrl, setIcsUrl] = useState('')
   const [flashMessage, setFlashMessage] = useState<string | null>(getInitialFlashMessage)
@@ -115,7 +178,10 @@ export default function Dashboard() {
       if (!res.ok) return
       const data = await res.json()
       if (cancelled) return
-      setProfile(data.user.profile)
+      setProfile(data.user.profile ?? {
+        school: '', major: '', currentYear: 1,
+        currentSemester: 'Fall', completedCourses: [], currentCourses: [],
+      })
       setIcsUrl(data.user.icsUrl ?? '')
     }
 
@@ -186,7 +252,9 @@ export default function Dashboard() {
       <div className="dashboard-content">
         {/* Top bar */}
         <header className="dashboard-topbar">
-          <h1 className="text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">{title}</h1>
+          <h1 className="text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">
+            {TABS.find(t => t.id === tab)?.label ?? 'Dashboard'}
+          </h1>
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={toggle}
@@ -242,43 +310,43 @@ export default function Dashboard() {
                 </div>
               ) : (
                 <div className="space-y-8">
-                  {/* Stats strip */}
-                  <div className="flex items-stretch divide-x divide-slate-200 dark:divide-slate-800 border-y border-slate-200 dark:border-slate-800 -mx-8 px-8">
-                    <div className="flex-1 py-4 pr-8">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">Term</p>
-                      <p className="mt-1 text-base font-semibold text-slate-900 dark:text-white">
-                        {profile.currentSemester} {new Date().getFullYear()}
-                      </p>
+
+                  {/* User info header */}
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-[linear-gradient(135deg,#1f6feb,#0f766e)] flex items-center justify-center shrink-0">
+                      <span className="text-lg font-bold text-white">{user.name.charAt(0)}</span>
                     </div>
-                    <div className="flex-1 py-4 px-8">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">Courses done</p>
-                      <p className="mt-1 text-2xl font-semibold text-slate-900 dark:text-white">{profile.completedCourses.length}</p>
-                    </div>
-                    <div className="flex-1 py-4 pl-8">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">Canvas</p>
-                      <p className={`mt-1 text-base font-semibold ${icsUrl ? 'text-emerald-500' : 'text-slate-400 dark:text-slate-600'}`}>
-                        {icsUrl ? 'Connected' : 'Manual'}
-                      </p>
+                    <div>
+                      <p className="text-lg font-semibold tracking-[-0.02em] text-slate-900 dark:text-white">{user.name}</p>
+                      <p className="text-sm text-slate-400 dark:text-slate-500">{profile.major} · {profile.school}</p>
                     </div>
                   </div>
 
-                  <OverviewPanel userId={user.id} onNavigate={(t) => setTab(t as Tab)} />
+                  <div className="h-px bg-slate-100 dark:bg-slate-800" />
+
+                  <OverviewPanel userId={user.id} profile={profile} refreshTrigger={analysisVersion} onNavigate={(t) => setTab(t as Tab)} />
                 </div>
               )}
             </div>
           )}
 
-          {tab === 'assignments' && <AssignmentPanel userId={user.id} />}
+          {tab === 'assignments' && <AssignmentPanel userId={user.id} onAssignmentsChange={() => setAnalysisVersion(v => v + 1)} />}
           {tab === 'events' && <EventPanel userId={user.id} />}
+          {tab === 'insights' && <InsightsPanel userId={user.id} profile={profile} />}
 
           {tab === 'settings' && (
-            <div className="grid gap-12 xl:grid-cols-3">
-              <div className="xl:col-span-2">{settingsPanel}</div>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500 mb-4">Account</p>
+            <div className="space-y-6 max-w-2xl">
+              {settingsPanel}
+              <UserNoteCard
+                userId={user.id}
+                initialNote={profile.userNote ?? ''}
+                onSave={(note) => setProfile(p => p ? { ...p, userNote: note || undefined } : p)}
+              />
+              <div className="rounded-[24px] border border-slate-200/80 bg-white/90 p-5 shadow-[0_14px_36px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:bg-slate-950/55 sm:p-6">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 mb-4">Account</p>
                 <p className="text-sm font-semibold text-slate-900 dark:text-white">{user.name}</p>
                 <p className="mt-0.5 text-sm text-slate-400 dark:text-slate-500">{user.email}</p>
-                <div className="mt-6 flex flex-col gap-2">
+                <div className="mt-4 flex flex-col gap-2">
                   <button
                     onClick={toggle}
                     className="w-full text-left px-3 py-2 rounded-md border border-slate-200 dark:border-slate-700 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"

@@ -20,6 +20,24 @@
           "COM S 352",
           "MATH 307",
           "SE 319"
+        ],
+        "currentCourses": [
+          {
+            "name": "COM S 321",
+            "difficulty": "hard"
+          },
+          {
+            "name": "COM S 363",
+            "difficulty": "medium"
+          },
+          {
+            "name": "MATH 314",
+            "difficulty": "hard"
+          },
+          {
+            "name": "SE 329",
+            "difficulty": "easy"
+          }
         ]
       },
       "assignments": [
@@ -107,22 +125,1351 @@
       "email": "heeryun@iastate.edu",
       "passwordHash": "f83f75f4260ebd42c26888399d250ebdeb6e46b376a2f20c70c1b54a41c69aad1b50a681a91cd9f7f1aaeeb65ac30786d5628bfcf38bb58136a639ae374434b0",
       "profile": {
-        "school": "Iowa State University",
-        "major": "Data Science",
+        "school": "",
+        "major": "",
         "currentYear": 1,
-        "currentSemester": "Spring",
-        "completedCourses": [
-          "COMS 1270",
-          "MATH 1650",
-          "ECON 1010",
-          "MUSIC 1020",
-          "ENGL 1010C"
-        ]
+        "currentSemester": "Fall",
+        "completedCourses": [],
+        "currentCourses": []
       },
       "assignments": [],
       "events": [],
-      "createdAt": "2026-04-10T04:37:19.027Z",
-      "icsUrl": "https://canvas.iastate.edu/feeds/calendars/user_4Mqk3Fkht0dwRwKn2c4j8RiBGk1SIxRBiuQJMtX1.ics"
+      "createdAt": "2026-04-10T04:37:19.027Z"
+    },
+    {
+      "id": "user-1775860205706",
+      "name": "USER",
+      "email": "user@gmail.com",
+      "passwordHash": "e5a48c705e426f8eb90f0db494605ddee29572cead61913a5df2ca9cddddeaf3622b74d3825b2c0c04c3dfaa8af4213b93f0e340ab36708309676df0bf290b8c",
+      "profile": {},
+      "assignments": [
+        {
+          "uid": "event-assignment-2753947",
+          "title": "After Class Activity: Do all CA/zyLabs 5.6-5.7 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-11",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592295
+        },
+        {
+          "uid": "event-assignment-2723887",
+          "title": "Lecture Reflection #2 [S2026-HDFS-2760-02]",
+          "course": "HEADS UP: You have to cite Module 5 LECTURE content for full points. Use a paren",
+          "dueDate": "2026-03-11",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592296
+        },
+        {
+          "uid": "event-assignment-2722686",
+          "title": "W08: Wolf #1 [S2026-PHIL-2010-01,02,04]",
+          "course": "The reading is [here] (https://canvas.iastate.edu/courses/125632/files/33447345?",
+          "dueDate": "2026-03-12",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592297
+        },
+        {
+          "uid": "event-assignment-2736336",
+          "title": "Homework 08-A [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-03-12",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592298
+        },
+        {
+          "uid": "event-assignment-2723899",
+          "title": "Midterm Survey Extra Credit [S2026-HDFS-2760-02]",
+          "course": "Complete the midterm survey for our course through this [anonymous Qualtrics Lin",
+          "dueDate": "2026-03-12",
+          "type": "exam",
+          "completed": false,
+          "id": 1775860592299
+        },
+        {
+          "uid": "event-assignment-2753983",
+          "title": "Before Class Activity: 6.1-6.4 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-13",
+          "dueTime": "8:50 AM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592300
+        },
+        {
+          "uid": "event-assignment-2722633",
+          "title": "A23 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-03-13",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592301
+        },
+        {
+          "uid": "event-assignment-2753948",
+          "title": "After Class Activity: Do all CA/zyLabs 5.8 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-13",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592302
+        },
+        {
+          "uid": "event-assignment-2777432",
+          "title": "Assignment 1 [S2026-COMS-2270]",
+          "course": "Due Friday, March 13, 11:59 pm",
+          "dueDate": "2026-03-13",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592303
+        },
+        {
+          "uid": "event-assignment-2730143",
+          "title": "Observational Studies and Experiments: Online Homework [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-03-13",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592304
+        },
+        {
+          "uid": "event-assignment-2730141",
+          "title": "Observational Studies and Experiments: Vocab Quiz [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-03-13",
+          "type": "quiz",
+          "completed": false,
+          "id": 1775860592305
+        },
+        {
+          "uid": "event-assignment-2723904",
+          "title": "Module 5.2 Top Hat Reading Assignment [S2026-HDFS-2760-02]",
+          "course": "Go to Top Hat to complete your assignment: M5.2 RA Sexual Orientation worth up t",
+          "dueDate": "2026-03-15",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592306
+        },
+        {
+          "uid": "event-assignment-2722687",
+          "title": "W10: Aristotle [S2026-PHIL-2010-01,02,04]",
+          "course": "The reading is [here] (https://canvas.iastate.edu/courses/125632/files/33447354?",
+          "dueDate": "2026-03-22",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592307
+        },
+        {
+          "uid": "event-assignment-2736343",
+          "title": "Homework 08-B [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-03-22",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592308
+        },
+        {
+          "uid": "event-assignment-2722635",
+          "title": "A24 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-03-23",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592309
+        },
+        {
+          "uid": "event-assignment-2753949",
+          "title": "After Class Activity: Do all CA/zyLabs 6.1-6.4 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-23",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592310
+        },
+        {
+          "uid": "event-assignment-2753991",
+          "title": "Before Class Activity: 7.1-7.4 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-23",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592311
+        },
+        {
+          "uid": "event-assignment-2736363",
+          "title": "Homework 08-C [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-03-24",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592312
+        },
+        {
+          "uid": "event-assignment-2754000",
+          "title": "Before Class Activity: 7.5-7.8 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-25",
+          "dueTime": "8:50 AM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592313
+        },
+        {
+          "uid": "event-assignment-2722636",
+          "title": "A25 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-03-25",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592314
+        },
+        {
+          "uid": "event-assignment-2722593",
+          "title": "Unit 4 test- Requires Respondus LockDown Browser [S2026-PHIL-2010-01,02,04]",
+          "course": "You have 30 minutes to complete the test. Answer all questions. The test has 17 ",
+          "dueDate": "2026-03-25",
+          "dueTime": "7:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592315
+        },
+        {
+          "uid": "event-assignment-2753951",
+          "title": "After Class Activity: Do all CA/zyLabs 7.1-7.4 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-25",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592316
+        },
+        {
+          "uid": "event-assignment-2722688",
+          "title": "W10: Tolstoy [S2026-PHIL-2010-01,02,04]",
+          "course": "The reading is [here] (https://canvas.iastate.edu/courses/125632/files/33447390?",
+          "dueDate": "2026-03-26",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592317
+        },
+        {
+          "uid": "event-assignment-2712819",
+          "title": "Exam 2 Q01-Q06 (Mult-Choice) [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-03-26",
+          "dueTime": "8:15 PM",
+          "type": "exam",
+          "completed": false,
+          "id": 1775860592318
+        },
+        {
+          "uid": "event-assignment-2712820",
+          "title": "Exam 2 Q07 (Work-Out) [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-03-26",
+          "dueTime": "8:15 PM",
+          "type": "exam",
+          "completed": false,
+          "id": 1775860592319
+        },
+        {
+          "uid": "event-assignment-2712821",
+          "title": "Exam 2 Q08 (Work-Out) [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-03-26",
+          "dueTime": "8:15 PM",
+          "type": "exam",
+          "completed": false,
+          "id": 1775860592320
+        },
+        {
+          "uid": "event-assignment-2712822",
+          "title": "Exam 2 Q09 (Work-Out) [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-03-26",
+          "dueTime": "8:15 PM",
+          "type": "exam",
+          "completed": false,
+          "id": 1775860592321
+        },
+        {
+          "uid": "event-assignment-2712823",
+          "title": "Exam 2 Q10 (Work-Out) [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-03-26",
+          "dueTime": "8:15 PM",
+          "type": "exam",
+          "completed": false,
+          "id": 1775860592322
+        },
+        {
+          "uid": "event-assignment-2722637",
+          "title": "A26 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-03-27",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592323
+        },
+        {
+          "uid": "event-assignment-2753984",
+          "title": "Before Class Activity: 7.9-7.11 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-27",
+          "dueTime": "8:50 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592324
+        },
+        {
+          "uid": "event-assignment-2753953",
+          "title": "After Class Activity: Do all CA/zyLabs 7.5-7.8 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-27",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592325
+        },
+        {
+          "uid": "event-assignment-2730116",
+          "title": "Randomness/Probability: Online Homework [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-03-27",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592326
+        },
+        {
+          "uid": "event-assignment-2730148",
+          "title": "Randomness/Probability: Vocab Quiz [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-03-27",
+          "type": "quiz",
+          "completed": false,
+          "id": 1775860592327
+        },
+        {
+          "uid": "event-assignment-2730127",
+          "title": "The Standard Deviation and the Normal Model: Online Homework [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-03-27",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592328
+        },
+        {
+          "uid": "event-assignment-2730139",
+          "title": "The Standard Deviation and the Normal Model: Vocab Quiz [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-03-27",
+          "type": "quiz",
+          "completed": false,
+          "id": 1775860592329
+        },
+        {
+          "uid": "event-assignment-2730170",
+          "title": "Written Homework - Module 2c [S2026-STAT-1010-04]",
+          "course": "A pdf file and a word file of the assignment are provided. Please use whichever ",
+          "dueDate": "2026-03-27",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592330
+        },
+        {
+          "uid": "event-assignment-2722689",
+          "title": "W11: Taylor [S2026-PHIL-2010-01,02,04]",
+          "course": "The reading is [here] (https://canvas.iastate.edu/courses/125632/files/33447463?",
+          "dueDate": "2026-03-29",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592331
+        },
+        {
+          "uid": "event-assignment-2753954",
+          "title": "After Class Activity: Do all CA/zyLabs 7.9-7.11 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-29",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592332
+        },
+        {
+          "uid": "event-assignment-2723905",
+          "title": "Module 6.1 Top Hat Reading Assignment [S2026-HDFS-2760-02]",
+          "course": "Go to Top Hat to complete your assignment: M6.1 RA Sexual Development from Adult",
+          "dueDate": "2026-03-29",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592333
+        },
+        {
+          "uid": "event-assignment-2753993",
+          "title": "Before Class Activity: 7.12-7.15 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-30",
+          "dueTime": "8:50 AM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592334
+        },
+        {
+          "uid": "event-assignment-2722638",
+          "title": "A27 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-03-30",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592335
+        },
+        {
+          "uid": "event-assignment-2753999",
+          "title": "Before Class Activity: 7.16 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-04-01",
+          "dueTime": "8:50 AM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592336
+        },
+        {
+          "uid": "event-assignment-2722640",
+          "title": "A28 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-04-01",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592337
+        },
+        {
+          "uid": "event-assignment-2753952",
+          "title": "After Class Activity: Do all CA/zyLabs 7.16 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-04-01",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592338
+        },
+        {
+          "uid": "event-assignment-2723883",
+          "title": "Discussion 3: Building and Maintaining Healthy Relationships [S2026-HDFS-2760-02]",
+          "course": "Purpose: This discussion gives you the opportunity to reflect on what you learne",
+          "dueDate": "2026-04-01",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592339
+        },
+        {
+          "uid": "event-assignment-2722690",
+          "title": "W11: Wolf #2 [S2026-PHIL-2010-01,02,04]",
+          "course": "The reading is [here] (https://canvas.iastate.edu/courses/125632/files/33447392?",
+          "dueDate": "2026-04-02",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592340
+        },
+        {
+          "uid": "event-assignment-2736340",
+          "title": "Homework 10-A [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-02",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592341
+        },
+        {
+          "uid": "event-assignment-2753985",
+          "title": "Before Class Activity: 8.1-8.4 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-04-03",
+          "dueTime": "8:50 AM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592342
+        },
+        {
+          "uid": "event-assignment-2722642",
+          "title": "A29 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-04-03",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592343
+        },
+        {
+          "uid": "event-assignment-2753955",
+          "title": "After Class Activity: Do all CA/zyLabs 8.1-8.4 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-04-03",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592344
+        },
+        {
+          "uid": "event-assignment-2791179",
+          "title": "Team Registration [2026 Applied AI]",
+          "course": "Submit your team's completed plan from the MVP & Project Planning activity. The ",
+          "dueDate": "2026-04-03",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592345
+        },
+        {
+          "uid": "event-assignment-2730120",
+          "title": "Sampling Distribution for the Sample Proportion: Online Homework [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-04-04",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592346
+        },
+        {
+          "uid": "event-assignment-2730140",
+          "title": "Sampling Distribution for the Sample Proportion: Vocab Quiz [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-04-04",
+          "type": "quiz",
+          "completed": false,
+          "id": 1775860592347
+        },
+        {
+          "uid": "event-assignment-2730171",
+          "title": "Written Homework - Module 3a [S2026-STAT-1010-04]",
+          "course": "A pdf file and a word file of the assignment are provided. Please use whichever ",
+          "dueDate": "2026-04-04",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592348
+        },
+        {
+          "uid": "event-assignment-2736358",
+          "title": "Homework 10-B [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-05",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592349
+        },
+        {
+          "uid": "event-assignment-2723906",
+          "title": "Module 6.2 Top Hat Reading Assignment [S2026-HDFS-2760-02]",
+          "course": "Go to Top Hat to complete your assignment: M6.2 RA Sexual Relationships worth up",
+          "dueDate": "2026-04-05",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592350
+        },
+        {
+          "uid": "event-assignment-2753994",
+          "title": "Before Class Activity: 8.5-8.7 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-04-06",
+          "dueTime": "8:50 AM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592351
+        },
+        {
+          "uid": "event-assignment-2722644",
+          "title": "A30 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-04-06",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592352
+        },
+        {
+          "uid": "event-assignment-2722691",
+          "title": "W12: Smart [S2026-PHIL-2010-01,02,04]",
+          "course": "The reading is [here] (https://canvas.iastate.edu/courses/125632/files/33447430?",
+          "dueDate": "2026-04-07",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592353
+        },
+        {
+          "uid": "event-assignment-2736360",
+          "title": "Homework 10-C [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-07",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592354
+        },
+        {
+          "uid": "event-assignment-2791600",
+          "title": "Before Class Activity: Do All PAs 8.8 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-04-08",
+          "dueTime": "8:50 AM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592355
+        },
+        {
+          "uid": "event-assignment-2722646",
+          "title": "A31 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-04-08",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592356
+        },
+        {
+          "uid": "event-assignment-2722596",
+          "title": "Unit 5 test- Requires Respondus LockDown Browser [S2026-PHIL-2010-01,02,04]",
+          "course": "You have 30 minutes to complete the test. Answer all questions. The test has 11 ",
+          "dueDate": "2026-04-08",
+          "dueTime": "7:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592357
+        },
+        {
+          "uid": "event-assignment-2753957",
+          "title": "After Class Activity: Do all CA/zyLabs 8.5-8.7 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-04-08",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592358
+        },
+        {
+          "uid": "event-assignment-2722692",
+          "title": "W12: Williams [S2026-PHIL-2010-01,02,04]",
+          "course": "The reading is [here] (https://canvas.iastate.edu/courses/125632/files/33447482?",
+          "dueDate": "2026-04-09",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592359
+        },
+        {
+          "uid": "event-assignment-2736364",
+          "title": "Homework 11-A [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-09",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592360
+        },
+        {
+          "uid": "event-assignment-2722648",
+          "title": "A32 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-04-10",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592361
+        },
+        {
+          "uid": "event-assignment-2712871",
+          "title": "Learning Strategies Inventory 2 [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-10",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592362
+        },
+        {
+          "uid": "event-assignment-2730124",
+          "title": "Confidence Intervals for Proportions: Online Homework [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-04-10",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592363
+        },
+        {
+          "uid": "event-assignment-2730119",
+          "title": "Confidence Intervals for Proportions: Vocab Quiz [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-04-10",
+          "type": "quiz",
+          "completed": false,
+          "id": 1775860592364
+        },
+        {
+          "uid": "event-assignment-2793712",
+          "title": "Masters Winner [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-04-10",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592365
+        },
+        {
+          "uid": "event-assignment-2730172",
+          "title": "Written Homework - Module 3b [S2026-STAT-1010-04]",
+          "course": "A pdf file and a word file of the assignment are provided. Please use whichever ",
+          "dueDate": "2026-04-10",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592366
+        },
+        {
+          "uid": "event-assignment-2722693",
+          "title": "W13: Foot [S2026-PHIL-2010-01,02,04]",
+          "course": "The reading is [here] (https://canvas.iastate.edu/courses/125632/files/33447360?",
+          "dueDate": "2026-04-12",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592367
+        },
+        {
+          "uid": "event-assignment-2736334",
+          "title": "Homework 11-B [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-12",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592368
+        },
+        {
+          "uid": "event-assignment-2723907",
+          "title": "Module 7.1 Top Hat Reading Assignment [S2026-HDFS-2760-02]",
+          "course": "Go to Top Hat to complete your assignment: M7.1 RA Sexual Behavior worth up to 1",
+          "dueDate": "2026-04-12",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592369
+        },
+        {
+          "uid": "event-assignment-2722649",
+          "title": "A33 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-04-13",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592370
+        },
+        {
+          "uid": "event-assignment-2736348",
+          "title": "Homework 11-C [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-14",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592371
+        },
+        {
+          "uid": "event-assignment-2792436",
+          "title": "Application for Finals [2026 Applied AI]",
+          "course": "Submit these items to complete your finals application:",
+          "dueDate": "2026-04-14",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592372
+        },
+        {
+          "uid": "event-assignment-2722651",
+          "title": "A34 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-04-15",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592373
+        },
+        {
+          "uid": "event-assignment-2723888",
+          "title": "Lecture Reflection #3 [S2026-HDFS-2760-02]",
+          "course": "*For full points, you must use parenthetical citation of Module 7 lecture materi",
+          "dueDate": "2026-04-15",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592374
+        },
+        {
+          "uid": "event-assignment-2722694",
+          "title": "W13: Thomson [S2026-PHIL-2010-01,02,04]",
+          "course": "The reading is [here] (https://canvas.iastate.edu/courses/125632/files/33447298?",
+          "dueDate": "2026-04-16",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592375
+        },
+        {
+          "uid": "event-assignment-2736335",
+          "title": "Homework 12-A [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-16",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592376
+        },
+        {
+          "uid": "event-assignment-2722654",
+          "title": "A35 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-04-17",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592377
+        },
+        {
+          "uid": "event-assignment-2730132",
+          "title": "Hypothesis Testing for Proportions: Online Homework [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-04-17",
+          "dueTime": "5:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592378
+        },
+        {
+          "uid": "event-assignment-2730150",
+          "title": "Hypothesis Testing for Proportions: Vocab Quiz [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-04-17",
+          "dueTime": "5:00 PM",
+          "type": "quiz",
+          "completed": false,
+          "id": 1775860592379
+        },
+        {
+          "uid": "event-assignment-2730173",
+          "title": "Written Homework - Module 3c [S2026-STAT-1010-04]",
+          "course": "A pdf file and a word file of the assignment are provided. Please use whichever ",
+          "dueDate": "2026-04-17",
+          "dueTime": "5:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592380
+        },
+        {
+          "uid": "event-assignment-2722696",
+          "title": "W14: Plato #2 [S2026-PHIL-2010-01,02,04]",
+          "course": "",
+          "dueDate": "2026-04-19",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592381
+        },
+        {
+          "uid": "event-assignment-2791718",
+          "title": "Assignment 2 [S2026-COMS-2270]",
+          "course": "Due Sunday, April 19, 11:59pm",
+          "dueDate": "2026-04-19",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592382
+        },
+        {
+          "uid": "event-assignment-2736362",
+          "title": "Homework 12-B [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-19",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592383
+        },
+        {
+          "uid": "event-assignment-2723908",
+          "title": "Module 7.2 Top Hat Reading Assignment  [S2026-HDFS-2760-02]",
+          "course": "Go to Top Hat to complete your assignment: M7.2 RA Fetishes, Kinks, and Paraphil",
+          "dueDate": "2026-04-19",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592384
+        },
+        {
+          "uid": "event-assignment-2722656",
+          "title": "A36 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-04-20",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592385
+        },
+        {
+          "uid": "event-assignment-2722695",
+          "title": "W14: Hobbes [S2026-PHIL-2010-01,02,04]",
+          "course": "",
+          "dueDate": "2026-04-21",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592386
+        },
+        {
+          "uid": "event-assignment-2736365",
+          "title": "Homework 12-C [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-21",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592387
+        },
+        {
+          "uid": "event-assignment-2722658",
+          "title": "A37 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-04-22",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592388
+        },
+        {
+          "uid": "event-assignment-2722602",
+          "title": "Unit 6 test- Requires Respondus LockDown Browser [S2026-PHIL-2010-01,02,04]",
+          "course": "",
+          "dueDate": "2026-04-22",
+          "dueTime": "7:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592389
+        },
+        {
+          "uid": "event-assignment-2736341",
+          "title": "Homework 13-A [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-23",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592390
+        },
+        {
+          "uid": "event-assignment-2722659",
+          "title": "A38 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-04-24",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592391
+        },
+        {
+          "uid": "event-assignment-2730138",
+          "title": "Sampling Distribution for the Sample Mean: Online Homework [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-04-24",
+          "dueTime": "5:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592392
+        },
+        {
+          "uid": "event-assignment-2730123",
+          "title": "Sampling Distribution for the Sample Mean: Vocab Quiz [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-04-24",
+          "dueTime": "5:00 PM",
+          "type": "quiz",
+          "completed": false,
+          "id": 1775860592393
+        },
+        {
+          "uid": "event-assignment-2736337",
+          "title": "Homework 13-B [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-26",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592394
+        },
+        {
+          "uid": "event-assignment-2723909",
+          "title": "Module 8 Top Hat Reading Assignment  [S2026-HDFS-2760-02]",
+          "course": "Go to Top Hat to complete your assignment: M8 RA Sexual Coercion, Harassment and",
+          "dueDate": "2026-04-26",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592395
+        },
+        {
+          "uid": "event-assignment-2722660",
+          "title": "A39 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-04-27",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592396
+        },
+        {
+          "uid": "event-assignment-2722698",
+          "title": "W15: Rawls [S2026-PHIL-2010-01,02,04]",
+          "course": "",
+          "dueDate": "2026-04-28",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592397
+        },
+        {
+          "uid": "event-assignment-2736361",
+          "title": "Homework 13-C [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-28",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592398
+        },
+        {
+          "uid": "event-assignment-2722661",
+          "title": "A40 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-04-29",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592399
+        },
+        {
+          "uid": "event-assignment-2722697",
+          "title": "W15: Nozick #2 [S2026-PHIL-2010-01,02,04]",
+          "course": "",
+          "dueDate": "2026-04-30",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592400
+        },
+        {
+          "uid": "event-assignment-2712824",
+          "title": "Exam 3 Q01-Q06 (Mult-Choice) [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-30",
+          "dueTime": "8:15 PM",
+          "type": "exam",
+          "completed": false,
+          "id": 1775860592401
+        },
+        {
+          "uid": "event-assignment-2712825",
+          "title": "Exam 3 Q07 (Work-Out) [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-30",
+          "dueTime": "8:15 PM",
+          "type": "exam",
+          "completed": false,
+          "id": 1775860592402
+        },
+        {
+          "uid": "event-assignment-2712826",
+          "title": "Exam 3 Q08 (Work-Out) [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-30",
+          "dueTime": "8:15 PM",
+          "type": "exam",
+          "completed": false,
+          "id": 1775860592403
+        },
+        {
+          "uid": "event-assignment-2712827",
+          "title": "Exam 3 Q09 (Work-Out) [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-30",
+          "dueTime": "8:15 PM",
+          "type": "exam",
+          "completed": false,
+          "id": 1775860592404
+        },
+        {
+          "uid": "event-assignment-2712828",
+          "title": "Exam 3 Q10 (Work-Out) [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-04-30",
+          "dueTime": "8:15 PM",
+          "type": "exam",
+          "completed": false,
+          "id": 1775860592405
+        },
+        {
+          "uid": "event-assignment-2722662",
+          "title": "A41 [S2026-PHIL-2010-01,02,04]",
+          "course": "In-class assignment.",
+          "dueDate": "2026-05-01",
+          "dueTime": "4:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592406
+        },
+        {
+          "uid": "event-assignment-2730144",
+          "title": "Inferences for Means: Online Homework-Part1 [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-05-01",
+          "dueTime": "5:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592407
+        },
+        {
+          "uid": "event-assignment-2730128",
+          "title": "Inferences for Means: Online Homework-Part2 [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-05-01",
+          "dueTime": "5:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592408
+        },
+        {
+          "uid": "event-assignment-2730121",
+          "title": "Inferences for Means: Vocab Quiz-Part1 [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-05-01",
+          "dueTime": "5:00 PM",
+          "type": "quiz",
+          "completed": false,
+          "id": 1775860592409
+        },
+        {
+          "uid": "event-assignment-2730133",
+          "title": "Inferences for Means: Vocab Quiz-Part2 [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-05-01",
+          "dueTime": "5:00 PM",
+          "type": "quiz",
+          "completed": false,
+          "id": 1775860592410
+        },
+        {
+          "uid": "event-assignment-2730125",
+          "title": "More about Tests and Intervals: Online Homework [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-05-01",
+          "dueTime": "5:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592411
+        },
+        {
+          "uid": "event-assignment-2730174",
+          "title": "Written Homework - Module 4b  [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-05-01",
+          "dueTime": "5:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592412
+        },
+        {
+          "uid": "event-assignment-2723910",
+          "title": "Module 9.1 and 9.2 Top Hat Reading Assignments [S2026-HDFS-2760-02]",
+          "course": "This week there are two chapters to read (the last two!!). Go to Top Hat and com",
+          "dueDate": "2026-05-03",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592413
+        },
+        {
+          "uid": "event-assignment-2722674",
+          "title": "Paper outline/draft [S2026-PHIL-2010-01,02,04]",
+          "course": "Choose one of the five paper topics ([here] (https://canvas.iastate.edu/courses/",
+          "dueDate": "2026-05-06",
+          "dueTime": "10:00 AM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592414
+        },
+        {
+          "uid": "event-assignment-2722598",
+          "title": "Unit 7 test- Requires Respondus LockDown Browser [S2026-PHIL-2010-01,02,04]",
+          "course": "",
+          "dueDate": "2026-05-06",
+          "dueTime": "7:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592415
+        },
+        {
+          "uid": "event-assignment-2723889",
+          "title": "Lecture Reflection #4 [S2026-HDFS-2760-02]",
+          "course": "Assignment rationale and context:",
+          "dueDate": "2026-05-06",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592416
+        },
+        {
+          "uid": "event-assignment-2736342",
+          "title": "Homework 14-A [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-05-07",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592417
+        },
+        {
+          "uid": "event-assignment-2730130",
+          "title": "Inference for Groups: Online Homework-Part1 [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-05-08",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592418
+        },
+        {
+          "uid": "event-assignment-2730129",
+          "title": "Inference for Groups: Online Homework-Part2 [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-05-08",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592419
+        },
+        {
+          "uid": "event-assignment-2730134",
+          "title": "Inference for Groups: Vocab Quiz-Part1 [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-05-08",
+          "type": "quiz",
+          "completed": false,
+          "id": 1775860592420
+        },
+        {
+          "uid": "event-assignment-2730118",
+          "title": "Inference for Groups: Vocab Quiz-Part2 [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-05-08",
+          "type": "quiz",
+          "completed": false,
+          "id": 1775860592421
+        },
+        {
+          "uid": "event-assignment-2722673",
+          "title": "Paper [S2026-PHIL-2010-01,02,04]",
+          "course": "Choose one of the five paper topics ([here] (https://canvas.iastate.edu/courses/",
+          "dueDate": "2026-05-08",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592422
+        },
+        {
+          "uid": "event-assignment-2730175",
+          "title": "Written Homework - Module 4c  [S2026-STAT-1010-04]",
+          "course": "",
+          "dueDate": "2026-05-08",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592423
+        },
+        {
+          "uid": "event-assignment-2793183",
+          "title": "Extra Credit: Final Hidden Gem [S2026-HDFS-2760-02]",
+          "course": "NOTE: Please complete this after you have completed the rest of the coursework (",
+          "dueDate": "2026-05-10",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592424
+        },
+        {
+          "uid": "event-assignment-2736350",
+          "title": "Homework 15-A [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-05-11",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592425
+        },
+        {
+          "uid": "event-assignment-2712829",
+          "title": "Fin Ex Q01-Q08 (Mult-Choice) [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-05-12",
+          "dueTime": "7:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592426
+        },
+        {
+          "uid": "event-assignment-2712830",
+          "title": "Fin Ex Q09 (Work-Out) [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-05-12",
+          "dueTime": "7:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592427
+        },
+        {
+          "uid": "event-assignment-2712831",
+          "title": "Fin Ex Q10 (Work-Out) [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-05-12",
+          "dueTime": "7:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592428
+        },
+        {
+          "uid": "event-assignment-2712832",
+          "title": "Fin Ex Q11 (Work-Out) [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-05-12",
+          "dueTime": "7:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592429
+        },
+        {
+          "uid": "event-assignment-2712833",
+          "title": "Fin Ex Q12 (Work-Out) [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-05-12",
+          "dueTime": "7:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592430
+        },
+        {
+          "uid": "event-assignment-2712834",
+          "title": "Fin Ex Q13 (Work-Out) [S2026-MATH-1660]",
+          "course": "",
+          "dueDate": "2026-05-12",
+          "dueTime": "7:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592431
+        },
+        {
+          "uid": "event-assignment-2676800",
+          "title": "Attestation [S2026-ORIEN-0000]",
+          "course": "",
+          "dueDate": "2026-05-15",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592432
+        },
+        {
+          "uid": "event-assignment-2527618",
+          "title": "Attestation [F2025-ORIEN-0000-FA]",
+          "course": "To record your participation in the course you need to answer the following one ",
+          "dueDate": "2026-06-29",
+          "dueTime": "11:00 PM",
+          "type": "homework",
+          "completed": false,
+          "id": 1775860592433
+        }
+      ],
+      "events": [],
+      "createdAt": "2026-04-10T22:30:05.735Z"
     }
   ]
 }
