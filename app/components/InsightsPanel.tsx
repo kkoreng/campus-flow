@@ -110,13 +110,12 @@ export default function InsightsPanel({ userId, profile }: Props) {
     <div className="space-y-8">
 
       {/* Header */}
-      <div className="flex items-end justify-between">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">Academic Insights</p>
-          <h2 className="mt-1 text-2xl font-semibold tracking-[-0.03em] text-slate-900 dark:text-white">
-            {insights?.profileHeadline ?? 'Your Study Profile'}
-          </h2>
-        </div>
+      <div className="flex items-center justify-between">
+        {insights?.profileHeadline ? (
+          <p className="text-sm font-medium text-slate-600 dark:text-slate-400">{insights.profileHeadline}</p>
+        ) : (
+          <div />
+        )}
         <button
           onClick={() => runInsights(assignments, true)}
           disabled={loading || assignments.length === 0}
@@ -164,28 +163,33 @@ export default function InsightsPanel({ userId, profile }: Props) {
       {!loading && insights && (
         <div className="space-y-8">
 
-          {/* Study Profile narrative */}
-          <div className="flex items-start gap-3">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-blue-500 dark:text-blue-400 shrink-0 mt-0.5">AI</span>
-            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{insights.studyProfile}</p>
-          </div>
-
-          {/* Behavior tags */}
-          {insights.behaviorTags?.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {insights.behaviorTags.map(tag => (
-                <span key={tag} className="rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-1 text-xs font-medium text-slate-600 dark:text-slate-300">
-                  {tag}
-                </span>
-              ))}
+          {/* Top recommendation */}
+          {insights.topRecommendation && (
+            <div className="rounded-xl border border-blue-200 dark:border-blue-900/50 bg-blue-50/60 dark:bg-blue-950/10 px-5 py-4">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-blue-500 dark:text-blue-400 mb-2">What to do next</p>
+              <p className="text-sm font-medium text-slate-800 dark:text-slate-200 leading-relaxed">{insights.topRecommendation}</p>
             </div>
           )}
 
-          {/* Top recommendation — hero */}
-          {insights.topRecommendation && (
-            <div className="rounded-xl border border-blue-200 dark:border-blue-900/50 bg-blue-50/60 dark:bg-blue-950/10 px-5 py-4">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-blue-500 dark:text-blue-400 mb-2">Top recommendation</p>
-              <p className="text-sm font-medium text-slate-800 dark:text-slate-200 leading-relaxed">{insights.topRecommendation}</p>
+          {/* Summary */}
+          {insights.studyProfile && (
+            <div className="rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/30 px-4 py-3">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400 mb-2">What this means</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{insights.studyProfile}</p>
+            </div>
+          )}
+
+          {/* Behavior tags */}
+          {insights.behaviorTags?.length > 0 && (
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500 mb-3">Patterns</p>
+              <div className="flex flex-wrap gap-2">
+                {insights.behaviorTags.map(tag => (
+                  <span key={tag} className="rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-1 text-xs font-medium text-slate-600 dark:text-slate-300">
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
 
@@ -204,7 +208,7 @@ export default function InsightsPanel({ userId, profile }: Props) {
             </div>
 
             <div className="rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-950/10 p-4">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-600 dark:text-amber-400 mb-3">Needs work</p>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-600 dark:text-amber-400 mb-3">Watchouts</p>
               <ul className="space-y-2.5">
                 {insights.improvements?.map((s, i) => (
                   <li key={i} className="flex items-start gap-2">

@@ -119,20 +119,16 @@ export default function OverviewPanel({ userId, profile, refreshTrigger, onNavig
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshTrigger])
 
-  const now = new Date()
-  const hour = now.getHours()
-  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
-
   return (
     <div className="space-y-8">
 
-      {/* ── Greeting + date ── */}
-      <div className="flex items-end justify-between">
-        <div>
-          <h2 className="text-3xl font-semibold tracking-[-0.04em] text-slate-900 dark:text-white">{greeting}</h2>
-          <p className="mt-1 text-sm text-slate-400 dark:text-slate-500">
-            {now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+      {/* ── Header meta ── */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex min-w-0 flex-1 items-center gap-3">
+          <p className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+            Overview
           </p>
+          <div className="h-px flex-1 bg-slate-200 dark:bg-slate-800" />
         </div>
         <button
           onClick={() => runAnalysis(assignments, true)}
@@ -195,7 +191,7 @@ export default function OverviewPanel({ userId, profile, refreshTrigger, onNavig
             </div>
           )}
 
-          {/* AI Comment */}
+          {/* Summary */}
           {analysis.summary && (
             <div className="rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/30 px-4 py-3 flex items-start gap-3">
               <span className="mt-0.5 shrink-0 rounded-md bg-blue-500/10 dark:bg-blue-500/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-blue-500 dark:text-blue-400">AI Comment</span>

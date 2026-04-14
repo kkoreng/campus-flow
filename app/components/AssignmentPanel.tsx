@@ -218,11 +218,6 @@ export default function AssignmentPanel({ userId, onAssignmentsChange }: { userI
     <div className="space-y-6">
 
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Assignments</p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-slate-900 dark:text-white">Deadline Tracker</h2>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Manage coursework manually or sync it from your Canvas ICS feed.</p>
-        </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="flex items-center gap-1.5 bg-slate-100/80 dark:bg-slate-800 rounded-2xl p-1">
             {(['all', 'pending', 'done'] as const).map(f => (

@@ -77,7 +77,7 @@ export default function SearchSelect({ value, onChange, onSearch, placeholder }:
         className="w-full rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       {open && results.length > 0 && (
-        <ul className="absolute z-50 mt-1 w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg overflow-hidden max-h-52 overflow-y-auto">
+        <ul className="absolute z-50 mt-1 w-full overflow-hidden rounded-md border border-slate-200 bg-white shadow-[0_18px_40px_rgba(15,23,42,0.12)] dark:border-slate-700 dark:bg-slate-900 dark:shadow-[0_22px_48px_rgba(0,0,0,0.45)] max-h-52 overflow-y-auto">
           {results.map((item, i) => (
             <li
               key={item}

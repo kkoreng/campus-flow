@@ -40,6 +40,11 @@
 html {
   min-height: 100%;
   background: var(--background);
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 body {
@@ -50,6 +55,19 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   transition: background-color 0.2s, color 0.2s;
+}
+
+html,
+body,
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none;
 }
 
 * {
@@ -151,12 +169,14 @@ body {
   background: var(--surface);
   border: 1px solid var(--line);
   backdrop-filter: blur(18px);
+  box-shadow: var(--shadow);
 }
 
 .glass-panel-strong {
   background: var(--surface-strong);
   border: 1px solid var(--line-strong);
   backdrop-filter: blur(22px);
+  box-shadow: var(--shadow);
 }
 
 /* ── Dashboard layout ── */
@@ -170,6 +190,7 @@ body {
   position: relative;
   border-right: 1px solid var(--line);
   background: var(--surface);
+  backdrop-filter: blur(18px);
 }
 
 .dark .dashboard-rail {
@@ -221,9 +242,26 @@ body {
 
 .dashboard-main {
   flex: 1;
-  padding: 36px 32px;
-  max-width: 960px;
+  padding: 36px 36px 48px;
+  max-width: 1240px;
   width: 100%;
+}
+
+@media (min-width: 1440px) {
+  .dashboard-topbar {
+    padding: 0 40px;
+  }
+
+  .dashboard-main {
+    max-width: 1360px;
+    padding: 40px 40px 56px;
+  }
+}
+
+input,
+select,
+textarea {
+  color-scheme: inherit;
 }
 
 @media (max-width: 980px) {

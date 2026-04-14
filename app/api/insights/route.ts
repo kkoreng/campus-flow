@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
-import type { Assignment, CurrentCourse, UserProfile } from '../../lib/types'
+import type { Assignment, UserProfile } from '../../lib/types'
 
 export interface CourseHealth {
   course: string
@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
   const total = assignments.length
   const pastCount = pastList.length
   const upcomingCount = upcomingList.length
+  const earnedCredits = profile.completedCourses.reduce((sum, course) => sum + course.credits, 0)
 
   // Per-course breakdown
   const allCourses = [...new Set(assignments.map(a => a.course))]
@@ -106,7 +107,7 @@ Student profile:
 - Year ${profile.currentYear}, ${profile.currentSemester} semester
 - School: ${profile.school || 'Not specified'}
 - Major: ${profile.major || 'Not specified'}
-- Completed courses history: ${profile.completedCourses.length} past courses
+- Earned credits so far: ${earnedCredits}
 ${profile.userNote ? `- Student's personal context (ALWAYS factor this into every field of your response):\n  "${profile.userNote}"` : ''}
 
 Overall stats:

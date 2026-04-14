@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { CourseDifficulty, CurrentCourse, Season, UserProfile } from '../lib/types'
+import type { CompletedCourse, CourseDifficulty, CurrentCourse, Season, UserProfile } from '../lib/types'
 import SearchSelect from './SearchSelect'
 import { SCHOOLS } from '../lib/schools'
 import { MAJORS } from '../lib/majors'
@@ -32,6 +32,7 @@ export default function ProfileSettingsPanel({
   onIcsChange,
 }: Props) {
   const [editing, setEditing] = useState(false)
+  const earnedCredits = profile.completedCourses.reduce((sum, course) => sum + course.credits, 0)
 
   // Edit form state
   const [school, setSchool] = useState(profile.school)
@@ -40,7 +41,8 @@ export default function ProfileSettingsPanel({
   const [currentSemester, setCurrentSemester] = useState<Season>(profile.currentSemester)
   const [ics, setIcs] = useState(icsUrl)
   const [courseInput, setCourseInput] = useState('')
-  const [completedCourses, setCompletedCourses] = useState<string[]>(profile.completedCourses)
+  const [courseCredits, setCourseCredits] = useState('')
+  const [completedCourses, setCompletedCourses] = useState<CompletedCourse[]>(profile.completedCourses ?? [])
   const [currentCourseInput, setCurrentCourseInput] = useState('')
   const [currentDifficulty, setCurrentDifficulty] = useState<CourseDifficulty>('medium')
   const [currentCourses, setCurrentCourses] = useState<CurrentCourse[]>(profile.currentCourses ?? [])
@@ -55,6 +57,8 @@ export default function ProfileSettingsPanel({
     setCurrentSemester(profile.currentSemester)
     setIcs(icsUrl)
     setCompletedCourses(profile.completedCourses)
+    setCourseInput('')
+    setCourseCredits('')
     setCurrentCourses(profile.currentCourses ?? [])
     setError('')
     setStatus('')
@@ -62,10 +66,17 @@ export default function ProfileSettingsPanel({
   }
 
   function addCourse() {
-    const trimmed = courseInput.trim()
-    if (!trimmed || completedCourses.includes(trimmed)) return
-    setCompletedCourses((prev) => [...prev, trimmed])
+    const trimmed = courseInput.trim().toUpperCase()
+    const credits = Number(courseCredits)
+    if (!trimmed || completedCourses.some((course) => course.name === trimmed)) return
+    if (!Number.isFinite(credits) || credits <= 0 || credits > 12) {
+      setError('Credit hours must be a number between 0 and 12.')
+      return
+    }
+    setCompletedCourses((prev) => [...prev, { name: trimmed, credits }])
     setCourseInput('')
+    setCourseCredits('')
+    setError('')
   }
 
   function addCurrentCourse() {
@@ -128,8 +139,7 @@ export default function ProfileSettingsPanel({
       <div className="rounded-[24px] border border-slate-200/80 bg-white/90 p-5 shadow-[0_14px_36px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:bg-slate-950/55 sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Profile</p>
-            <h2 className="mt-1 text-xl font-semibold tracking-[-0.03em] text-slate-950 dark:text-white">{profile.major || '—'}</h2>
+            <p className="text-xl font-semibold tracking-[-0.03em] text-slate-950 dark:text-white">{profile.major || '—'}</p>
             <p className="mt-0.5 text-sm text-slate-400 dark:text-slate-500">{profile.school || '—'}</p>
           </div>
           <button
@@ -147,8 +157,8 @@ export default function ProfileSettingsPanel({
             <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-200">{profile.currentSemester} Y{profile.currentYear}</p>
           </div>
           <div className="rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 px-4 py-3">
-            <p className="text-[10px] uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">Courses done</p>
-            <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-200">{profile.completedCourses.length}</p>
+            <p className="text-[10px] uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">Completed</p>
+            <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-200">{earnedCredits} credits</p>
           </div>
           <div className="rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 px-4 py-3">
             <p className="text-[10px] uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">Canvas ICS</p>
@@ -180,11 +190,7 @@ export default function ProfileSettingsPanel({
   // ── Edit mode ──
   return (
     <div className="rounded-[24px] border border-slate-200/80 bg-white/90 p-5 shadow-[0_14px_36px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:bg-slate-950/55 sm:p-6">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Edit Profile</p>
-          <h2 className="mt-1 text-xl font-semibold tracking-[-0.03em] text-slate-950 dark:text-white">Settings</h2>
-        </div>
+      <div className="flex items-center justify-end gap-4">
         <button
           onClick={() => { setEditing(false); setError('') }}
           className="shrink-0 rounded-md border border-slate-200 dark:border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
@@ -233,7 +239,7 @@ export default function ProfileSettingsPanel({
       </div>
 
       <div className="mt-5 border-t border-slate-200 pt-5 dark:border-slate-800">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Completed Courses</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Completed Credits</p>
         <div className="mt-3 flex gap-2">
           <input
             type="text"
@@ -242,6 +248,16 @@ export default function ProfileSettingsPanel({
             onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCourse() } }}
             placeholder="e.g. COM S 227"
             className="min-w-0 flex-1 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="number"
+            min="0.5"
+            max="12"
+            step="0.5"
+            value={courseCredits}
+            onChange={(e) => setCourseCredits(e.target.value)}
+            placeholder="Credits"
+            className="w-28 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             type="button"
@@ -254,9 +270,10 @@ export default function ProfileSettingsPanel({
         {completedCourses.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
             {completedCourses.map((course) => (
-              <span key={course} className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300">
-                {course}
-                <button type="button" onClick={() => setCompletedCourses(p => p.filter(c => c !== course))} className="text-slate-300 dark:text-slate-600 hover:text-rose-500 transition-colors leading-none">×</button>
+              <span key={course.name} className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300">
+                {course.name}
+                <span className="text-slate-400 dark:text-slate-500">{course.credits} cr</span>
+                <button type="button" onClick={() => setCompletedCourses(p => p.filter(c => c.name !== course.name))} className="text-slate-300 dark:text-slate-600 hover:text-rose-500 transition-colors leading-none">×</button>
               </span>
             ))}
           </div>

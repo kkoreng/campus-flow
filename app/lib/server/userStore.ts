@@ -1,7 +1,7 @@
 import { scryptSync, timingSafeEqual } from 'node:crypto'
 import { USE_MONGO, getDb } from './db'
 import { jsonFindByEmail, jsonFindById, jsonInsert, jsonUpdate } from './jsonStore'
-import type { UserProfile, Assignment, CampusEvent } from '../types'
+import type { UserProfile, Assignment, CampusEvent, CompletedCourse } from '../types'
 
 const PASSWORD_SALT = 'campusflow-static-salt'
 
@@ -37,14 +37,43 @@ export interface PublicUser {
   icsUrl?: string
 }
 
+function normalizeCompletedCourses(input: unknown): CompletedCourse[] {
+  if (!Array.isArray(input)) return []
+
+  return input.flatMap((item) => {
+    if (typeof item === 'string') {
+      const name = item.trim()
+      return name ? [{ name, credits: 0 }] : []
+    }
+
+    if (item && typeof item === 'object') {
+      const name = 'name' in item && typeof item.name === 'string' ? item.name.trim() : ''
+      const rawCredits = 'credits' in item ? Number(item.credits) : NaN
+      const credits = Number.isFinite(rawCredits) ? rawCredits : 0
+      return name ? [{ name, credits }] : []
+    }
+
+    return []
+  })
+}
+
 export function toPublicUser(user: DbUser): PublicUser {
   return {
     id: user.id,
     name: user.name,
     email: user.email,
-    profile: user.profile,
-    assignments: user.assignments,
-    events: user.events,
+    profile: {
+      school: '',
+      major: '',
+      currentYear: 1,
+      currentSemester: 'Fall' as const,
+      completedCourses: normalizeCompletedCourses(user.profile?.completedCourses),
+      currentCourses: [],
+      ...user.profile,
+      completedCourses: normalizeCompletedCourses(user.profile?.completedCourses),
+    },
+    assignments: user.assignments ?? [],
+    events: user.events ?? [],
     icsUrl: user.icsUrl,
   }
 }

@@ -11,15 +11,42 @@
         "currentYear": 2,
         "currentSemester": "Spring",
         "completedCourses": [
-          "COM S 227",
-          "COM S 228",
-          "MATH 165",
-          "MATH 166",
-          "ENGL 150",
-          "COM S 311",
-          "COM S 352",
-          "MATH 307",
-          "SE 319"
+          {
+            "name": "COM S 227",
+            "credits": 4
+          },
+          {
+            "name": "COM S 228",
+            "credits": 4
+          },
+          {
+            "name": "MATH 165",
+            "credits": 4
+          },
+          {
+            "name": "MATH 166",
+            "credits": 4
+          },
+          {
+            "name": "ENGL 150",
+            "credits": 3
+          },
+          {
+            "name": "COM S 311",
+            "credits": 3
+          },
+          {
+            "name": "COM S 352",
+            "credits": 3
+          },
+          {
+            "name": "MATH 307",
+            "credits": 3
+          },
+          {
+            "name": "SE 319",
+            "credits": 3
+          }
         ],
         "currentCourses": [
           {

@@ -1,7 +1,7 @@
 'use client'
 
 import type { ReactElement } from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
@@ -12,6 +12,7 @@ import AssignmentPanel from './AssignmentPanel'
 import EventPanel from './EventPanel'
 import ProfileSettingsPanel from './ProfileSettingsPanel'
 import InsightsPanel from './InsightsPanel'
+import ProgressPanel from './ProgressPanel'
 import LogoIcon from './LogoIcon'
 
 type Tab = 'dashboard' | 'assignments' | 'events' | 'insights' | 'settings'
@@ -67,15 +68,6 @@ const TABS: { id: Tab; label: string; icon: ReactElement }[] = [
     ),
   },
 ]
-
-function Avatar({ name }: { name: string }) {
-  const initials = name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()
-  return (
-    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#1f6feb,#0f766e)] text-xs font-semibold text-white shadow-lg shadow-blue-500/20">
-      {initials}
-    </div>
-  )
-}
 
 function SunIcon() {
   return (
@@ -156,6 +148,7 @@ export default function Dashboard() {
   const { theme, toggle } = useTheme()
   const router = useRouter()
 
+  const contentRef = useRef<HTMLDivElement>(null)
   const [tab, setTab] = useState<Tab>('dashboard')
   const [profileVersion, setProfileVersion] = useState(0)
   const [analysisVersion, setAnalysisVersion] = useState(0)
@@ -191,9 +184,9 @@ export default function Dashboard() {
 
   if (loading || !user || !profile) return null
 
-  const pendingSetup = !profile.school.trim() || !profile.major.trim()
-  const title = profile.major.trim() || 'Set up your workspace'
-  const subtitle = profile.school.trim() || 'Add your school and major to get started.'
+  const pendingSetup = !profile.school?.trim() || !profile.major?.trim()
+  const completedCredits = profile.completedCourses.reduce((sum, course) => sum + course.credits, 0)
+  const currentDateLabel = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
 
   const settingsPanel = (
     <ProfileSettingsPanel
@@ -212,12 +205,18 @@ export default function Dashboard() {
       <aside className="dashboard-rail">
         <div className="dashboard-rail-inner">
           {/* Logo */}
-          <div className="flex items-center gap-2.5 px-2 pb-4">
+          <button
+            onClick={() => {
+              setTab('dashboard')
+              contentRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+            className="flex items-center gap-2.5 px-2 pb-4"
+          >
             <LogoIcon size={30} />
             <p className="text-[17px] font-bold tracking-[-0.03em] text-slate-900 dark:text-white">
               Campus<span className="bg-[linear-gradient(135deg,#1f6feb,#0f766e)] bg-clip-text text-transparent">Flow</span>
             </p>
-          </div>
+          </button>
 
           <nav className="dashboard-rail-nav">
             {TABS.map((t) => (
@@ -241,21 +240,19 @@ export default function Dashboard() {
           <div className="dashboard-rail-meta">
             <p className="text-sm font-medium text-slate-800 dark:text-slate-200">{user.name}</p>
             <p className="mt-0.5 truncate text-xs text-slate-400 dark:text-slate-500">{user.email}</p>
-            <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
-              {pendingSetup ? 'Setup needed' : `${profile.completedCourses.length} courses logged`}
-            </p>
           </div>
         </div>
       </aside>
 
       {/* ── Content ── */}
-      <div className="dashboard-content">
+      <div ref={contentRef} className="dashboard-content">
         {/* Top bar */}
         <header className="dashboard-topbar">
-          <h1 className="text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">
+          <h1 className="text-sm font-semibold text-slate-500 dark:text-slate-400 truncate">
             {TABS.find(t => t.id === tab)?.label ?? 'Dashboard'}
           </h1>
           <div className="flex items-center gap-2 shrink-0">
+            <p className="hidden text-xs text-slate-400 dark:text-slate-500 md:block">{currentDateLabel}</p>
             <button
               onClick={toggle}
               className="h-8 w-8 flex items-center justify-center rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-slate-200 dark:hover:bg-slate-800 transition-colors"
@@ -295,7 +292,7 @@ export default function Dashboard() {
                     <div className="space-y-4">
                       {[
                         { color: 'bg-sky-500', text: 'Save academic info' },
-                        { color: 'bg-emerald-500', text: 'Add completed courses' },
+                        { color: 'bg-emerald-500', text: 'Add earned credits' },
                         { color: 'bg-violet-500', text: 'Sync Canvas or add assignments' },
                       ].map((step, i) => (
                         <div key={step.text} className="flex items-center gap-3">
@@ -312,17 +309,58 @@ export default function Dashboard() {
                 <div className="space-y-8">
 
                   {/* User info header */}
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-[linear-gradient(135deg,#1f6feb,#0f766e)] flex items-center justify-center shrink-0">
-                      <span className="text-lg font-bold text-white">{user.name.charAt(0)}</span>
+                  <div className="flex items-center justify-between gap-6 flex-wrap">
+                    {/* Identity */}
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-full bg-[linear-gradient(135deg,#1f6feb,#0f766e)] flex items-center justify-center shrink-0">
+                        <span className="text-base font-bold text-white">{user.name.charAt(0)}</span>
+                      </div>
+                      <div>
+                        <p className="text-base font-semibold tracking-[-0.02em] text-slate-900 dark:text-white">{user.name}</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500">{profile.major} · {profile.school}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-lg font-semibold tracking-[-0.02em] text-slate-900 dark:text-white">{user.name}</p>
-                      <p className="text-sm text-slate-400 dark:text-slate-500">{profile.major} · {profile.school}</p>
+
+                    {/* Quick stats */}
+                    <div className="flex items-center gap-5 shrink-0">
+                      <div className="text-center">
+                        <p className="text-[10px] uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">Year</p>
+                        <p className="mt-0.5 text-sm font-semibold text-slate-800 dark:text-slate-200">{profile.currentYear}</p>
+                      </div>
+                      <div className="h-6 w-px bg-slate-200 dark:bg-slate-700" />
+                      <div className="text-center">
+                        <p className="text-[10px] uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">Semester</p>
+                        <p className="mt-0.5 text-sm font-semibold text-slate-800 dark:text-slate-200">{profile.currentSemester}</p>
+                      </div>
+                      <div className="h-6 w-px bg-slate-200 dark:bg-slate-700" />
+                      <div className="text-center">
+                        <p className="text-[10px] uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">Completed</p>
+                        <p className="mt-0.5 text-sm font-semibold text-slate-800 dark:text-slate-200">{completedCredits} credits</p>
+                      </div>
                     </div>
                   </div>
 
+                  {/* Current courses */}
+                  {profile.currentCourses.length > 0 && (
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500 shrink-0">This semester</p>
+                      {profile.currentCourses.map(c => (
+                        <span key={c.name} className={`inline-flex items-center rounded-md border px-2.5 py-1 text-[11px] font-medium ${
+                          c.difficulty === 'hard'
+                            ? 'border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300'
+                            : c.difficulty === 'medium'
+                            ? 'border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300'
+                            : 'border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300'
+                        }`}>
+                          {c.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
                   <div className="h-px bg-slate-100 dark:bg-slate-800" />
+
+                  <ProgressPanel userId={user.id} refreshTrigger={analysisVersion} />
 
                   <OverviewPanel userId={user.id} profile={profile} refreshTrigger={analysisVersion} onNavigate={(t) => setTab(t as Tab)} />
                 </div>

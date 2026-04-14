@@ -95,11 +95,6 @@ export default function EventPanel({ userId }: { userId: string }) {
     <div className="space-y-6">
 
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Events</p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-slate-900 dark:text-white">Campus Calendar</h2>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Track academic, social, and career events in one place.</p>
-        </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="flex items-center gap-1.5 flex-wrap">
             <button

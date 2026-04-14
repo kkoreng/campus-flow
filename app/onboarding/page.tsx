@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../context/AuthContext'
-import type { CourseDifficulty, CurrentCourse, Season, UserProfile } from '../lib/types'
+import type { CompletedCourse, CourseDifficulty, CurrentCourse, Season, UserProfile } from '../lib/types'
 import LogoIcon from '../components/LogoIcon'
 import SearchSelect from '../components/SearchSelect'
 import { SCHOOLS } from '../lib/schools'
@@ -16,12 +16,6 @@ const DIFFICULTY_LABELS: Record<CourseDifficulty, string> = {
   medium: 'Medium',
   hard: 'Hard',
 }
-const DIFFICULTY_DOT: Record<CourseDifficulty, string> = {
-  easy: 'bg-emerald-400',
-  medium: 'bg-amber-400',
-  hard: 'bg-rose-500',
-}
-
 const DIFFICULTY_CHIP: Record<CourseDifficulty, string> = {
   easy: 'border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40',
   medium: 'border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40',
@@ -44,7 +38,8 @@ export default function OnboardingPage() {
 
   // Step 2
   const [completedInput, setCompletedInput] = useState('')
-  const [completedCourses, setCompletedCourses] = useState<string[]>([])
+  const [completedCredits, setCompletedCredits] = useState('')
+  const [completedCourses, setCompletedCourses] = useState<CompletedCourse[]>([])
 
   // Step 3
   const [currentInput, setCurrentInput] = useState('')
@@ -57,9 +52,16 @@ export default function OnboardingPage() {
 
   function addCompleted() {
     const t = completedInput.trim().toUpperCase()
-    if (!t || completedCourses.includes(t)) return
-    setCompletedCourses(p => [...p, t])
+    const credits = Number(completedCredits)
+    if (!t || completedCourses.some((course) => course.name === t)) return
+    if (!Number.isFinite(credits) || credits <= 0 || credits > 12) {
+      setError('Credit hours must be a number between 0 and 12.')
+      return
+    }
+    setCompletedCourses(p => [...p, { name: t, credits }])
     setCompletedInput('')
+    setCompletedCredits('')
+    setError('')
   }
 
   function addCurrent() {
@@ -131,7 +133,7 @@ export default function OnboardingPage() {
           <div className="space-y-6">
             <div>
               <h1 className="text-2xl font-semibold tracking-[-0.03em] text-slate-900 dark:text-white">Academic info</h1>
-              <p className="mt-1 text-sm text-slate-400">Tell us where you're studying and what you're majoring in.</p>
+              <p className="mt-1 text-sm text-slate-400">Tell us where you&apos;re studying and what you&apos;re majoring in.</p>
             </div>
             <div className="space-y-3">
               <SearchSelect
@@ -177,12 +179,12 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* Step 2 — Completed courses */}
+        {/* Step 2 — Earned credits */}
         {step === 2 && (
           <div className="space-y-6">
             <div>
-              <h1 className="text-2xl font-semibold tracking-[-0.03em] text-slate-900 dark:text-white">Completed courses</h1>
-              <p className="mt-1 text-sm text-slate-400">Courses you've already finished. Skip if none yet.</p>
+              <h1 className="text-2xl font-semibold tracking-[-0.03em] text-slate-900 dark:text-white">Earned credits</h1>
+              <p className="mt-1 text-sm text-slate-400">Add completed classes with their credit hours. Skip if none yet.</p>
             </div>
             <div className="space-y-3">
               <div className="flex gap-2">
@@ -193,6 +195,16 @@ export default function OnboardingPage() {
                   onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addCompleted() } }}
                   placeholder="e.g. COM S 227"
                   className="flex-1 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <input
+                  type="number"
+                  min="0.5"
+                  max="12"
+                  step="0.5"
+                  value={completedCredits}
+                  onChange={e => setCompletedCredits(e.target.value)}
+                  placeholder="Credits"
+                  className="w-28 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                   type="button"
@@ -205,9 +217,10 @@ export default function OnboardingPage() {
               {completedCourses.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {completedCourses.map(c => (
-                    <span key={c} className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300">
-                      {c}
-                      <button type="button" onClick={() => setCompletedCourses(p => p.filter(x => x !== c))} className="text-slate-300 dark:text-slate-600 hover:text-rose-500 transition-colors leading-none">×</button>
+                    <span key={c.name} className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300">
+                      {c.name}
+                      <span className="text-slate-400 dark:text-slate-500">{c.credits} cr</span>
+                      <button type="button" onClick={() => setCompletedCourses(p => p.filter(x => x.name !== c.name))} className="text-slate-300 dark:text-slate-600 hover:text-rose-500 transition-colors leading-none">×</button>
                     </span>
                   ))}
                 </div>
@@ -229,7 +242,7 @@ export default function OnboardingPage() {
           <div className="space-y-6">
             <div>
               <h1 className="text-2xl font-semibold tracking-[-0.03em] text-slate-900 dark:text-white">Current courses</h1>
-              <p className="mt-1 text-sm text-slate-400">Courses you're taking this semester. Rate the difficulty so AI can prioritize your workload.</p>
+              <p className="mt-1 text-sm text-slate-400">Courses you&apos;re taking this semester. Rate the difficulty so AI can prioritize your workload.</p>
             </div>
             <div className="space-y-3">
               <div className="flex gap-2">

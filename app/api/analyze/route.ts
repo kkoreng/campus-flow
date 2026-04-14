@@ -53,6 +53,7 @@ export async function POST(req: NextRequest) {
   const upcoming = assignments.filter(a => !a.completed && a.dueDate >= today)
   const past = assignments.filter(a => a.dueDate < today)
   const markedDoneBeforeDue = assignments.filter(a => a.completed && a.dueDate >= today)
+  const earnedCredits = profile.completedCourses.reduce((sum, course) => sum + course.credits, 0)
 
   const courseContext = profile.currentCourses.length > 0
     ? profile.currentCourses.map((c: CurrentCourse) => `- ${c.name} (difficulty: ${c.difficulty})`).join('\n')
@@ -88,7 +89,7 @@ Student profile:
 - Year ${profile.currentYear}, ${profile.currentSemester} semester
 - School: ${profile.school || 'Not specified'}
 - Major: ${profile.major || 'Not specified'}
-- Completed courses: ${profile.completedCourses.length} courses total
+- Earned credits so far: ${earnedCredits}
 
 Current courses:
 ${courseContext}
