@@ -7,6 +7,7 @@ export interface Assignment {
   course: string
   dueDate: string
   dueTime?: string
+  difficulty: CourseDifficulty
   type: AssignmentType
   completed: boolean
 }
@@ -25,7 +26,7 @@ export interface CampusEvent {
 }
 
 // ── Academic Profile ─────────────────────────────────────────────
-export type Season = 'Fall' | 'Spring' | 'Summer'
+export type Season = 'Fall' | 'Spring' | 'Summer' | 'Winter'
 export type CourseDifficulty = 'easy' | 'medium' | 'hard'
 
 export interface CompletedCourse {
@@ -45,5 +46,6 @@ export interface UserProfile {
   currentSemester: Season
   completedCourses: CompletedCourse[]
   currentCourses: CurrentCourse[]
+  dailyNotes?: Record<string, string>
   userNote?: string
 }

@@ -75,7 +75,8 @@
           "dueDate": "2026-04-15",
           "dueTime": "11:59 PM",
           "type": "homework",
-          "completed": false
+          "completed": false,
+          "difficulty": "medium"
         },
         {
           "id": 2,
@@ -84,7 +85,8 @@
           "dueDate": "2026-04-17",
           "dueTime": "2:00 PM",
           "type": "exam",
-          "completed": false
+          "completed": false,
+          "difficulty": "medium"
         },
         {
           "id": 3,
@@ -93,7 +95,8 @@
           "dueDate": "2026-04-18",
           "dueTime": "5:00 PM",
           "type": "lab",
-          "completed": false
+          "completed": false,
+          "difficulty": "medium"
         },
         {
           "id": 4,
@@ -102,7 +105,8 @@
           "dueDate": "2026-04-22",
           "dueTime": "11:59 PM",
           "type": "project",
-          "completed": false
+          "completed": false,
+          "difficulty": "medium"
         },
         {
           "id": 5,
@@ -111,7 +115,8 @@
           "dueDate": "2026-04-14",
           "dueTime": "9:00 AM",
           "type": "quiz",
-          "completed": true
+          "completed": true,
+          "difficulty": "medium"
         }
       ],
       "events": [
@@ -1497,6 +1502,1314 @@
       ],
       "events": [],
       "createdAt": "2026-04-10T22:30:05.735Z"
+    },
+    {
+      "id": "user-1776198085763",
+      "name": "Heeryun Cho",
+      "email": "qwer@iastate.edu",
+      "passwordHash": "e1d9cb5e4fe26ad216eb4ffedd6bbf68ff8170024e087ec8d92cc4a49770e96bb8a5fbaef4a67aab1b215da5a3185535268d3c31032d4c9b1dd172ff33e457b5",
+      "profile": {
+        "school": "Iowa State University",
+        "major": "Computer Science",
+        "currentYear": 3,
+        "currentSemester": "Spring",
+        "completedCourses": [
+          {
+            "name": "COMS 2270",
+            "credits": 3
+          },
+          {
+            "name": "ENGL 2500",
+            "credits": 3
+          },
+          {
+            "name": "ENGL 2070",
+            "credits": 3
+          },
+          {
+            "name": "COMS 1270",
+            "credits": 3
+          },
+          {
+            "name": "MATH 1650",
+            "credits": 4
+          },
+          {
+            "name": "MATH 1660",
+            "credits": 4
+          },
+          {
+            "name": "MATH 2160",
+            "credits": 4
+          },
+          {
+            "name": "ABCD",
+            "credits": 3
+          }
+        ],
+        "currentCourses": [
+          {
+            "name": "COMS 2270",
+            "difficulty": "medium"
+          },
+          {
+            "name": "MATH 2650",
+            "difficulty": "hard"
+          },
+          {
+            "name": "COMS 1060",
+            "difficulty": "easy"
+          }
+        ],
+        "dailyNotes": {}
+      },
+      "assignments": [
+        {
+          "uid": "event-assignment-2703135",
+          "title": "Chapter 7 Quiz [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-03-15",
+          "dueTime": "11:00 PM",
+          "difficulty": "medium",
+          "type": "quiz",
+          "completed": false,
+          "id": 1776210993256
+        },
+        {
+          "uid": "event-assignment-2703211",
+          "title": "WK7HW (Assignment Drop Box) [S2026-COM S-1060]",
+          "course": "Important notes:",
+          "dueDate": "2026-03-15",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993257
+        },
+        {
+          "uid": "event-assignment-2703237",
+          "title": "wk7hw (late) [S2026-COM S-1060]",
+          "course": "Important notes:",
+          "dueDate": "2026-03-18",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993258
+        },
+        {
+          "uid": "event-assignment-2724418",
+          "title": "Homework 08-B [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-03-22",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993259
+        },
+        {
+          "uid": "event-assignment-2716303",
+          "title": "3/23/26 HARMONY: Do you know the song kumbaya, my lord? [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-03-23",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993260
+        },
+        {
+          "uid": "event-assignment-2753949",
+          "title": "After Class Activity: Do all CA/zyLabs 6.1-6.4 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-23",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993261
+        },
+        {
+          "uid": "event-assignment-2753991",
+          "title": "Before Class Activity: 7.1-7.4 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-23",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993262
+        },
+        {
+          "uid": "event-assignment-2724419",
+          "title": "Homework 08-C [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-03-24",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993263
+        },
+        {
+          "uid": "event-assignment-2754000",
+          "title": "Before Class Activity: 7.5-7.8 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-25",
+          "dueTime": "8:50 AM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993264
+        },
+        {
+          "uid": "event-assignment-2753951",
+          "title": "After Class Activity: Do all CA/zyLabs 7.1-7.4 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-25",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993265
+        },
+        {
+          "uid": "event-assignment-2703222",
+          "title": "weeks 1 to 7 late homework [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-03-25",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993266
+        },
+        {
+          "uid": "event-assignment-2714210",
+          "title": "Exam 2 Q01-Q06 (Mult-Choice) [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-03-26",
+          "dueTime": "6:45 PM",
+          "difficulty": "medium",
+          "type": "exam",
+          "completed": false,
+          "id": 1776210993267
+        },
+        {
+          "uid": "event-assignment-2714211",
+          "title": "Exam 2 Q07 (Work-Out) [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-03-26",
+          "dueTime": "6:45 PM",
+          "difficulty": "medium",
+          "type": "exam",
+          "completed": false,
+          "id": 1776210993268
+        },
+        {
+          "uid": "event-assignment-2714212",
+          "title": "Exam 2 Q08 (Work-Out) [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-03-26",
+          "dueTime": "6:45 PM",
+          "difficulty": "medium",
+          "type": "exam",
+          "completed": false,
+          "id": 1776210993269
+        },
+        {
+          "uid": "event-assignment-2714213",
+          "title": "Exam 2 Q09 (Work-Out) [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-03-26",
+          "dueTime": "6:45 PM",
+          "difficulty": "medium",
+          "type": "exam",
+          "completed": false,
+          "id": 1776210993270
+        },
+        {
+          "uid": "event-assignment-2714214",
+          "title": "Exam 2 Q10 (Work-Out) [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-03-26",
+          "dueTime": "6:45 PM",
+          "difficulty": "medium",
+          "type": "exam",
+          "completed": false,
+          "id": 1776210993271
+        },
+        {
+          "uid": "event-assignment-2788358",
+          "title": "3/27/25 HARMONY: Why do some songs make me feel sad? [S2026-MUSIC-1020]",
+          "course": "Enjoy learning about how the element of harmony affects your response to music m",
+          "dueDate": "2026-03-27",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993272
+        },
+        {
+          "uid": "event-assignment-2753984",
+          "title": "Before Class Activity: 7.9-7.11 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-27",
+          "dueTime": "8:50 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993273
+        },
+        {
+          "uid": "event-assignment-2753953",
+          "title": "After Class Activity: Do all CA/zyLabs 7.5-7.8 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-27",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993274
+        },
+        {
+          "uid": "event-assignment-2753954",
+          "title": "After Class Activity: Do all CA/zyLabs 7.9-7.11 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-29",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993275
+        },
+        {
+          "uid": "event-assignment-2703155",
+          "title": "Chapter 8 Quiz [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-03-29",
+          "difficulty": "medium",
+          "type": "quiz",
+          "completed": false,
+          "id": 1776210993276
+        },
+        {
+          "uid": "event-assignment-2703213",
+          "title": "WK8HW (Assignment Drop Box) [S2026-COM S-1060]",
+          "course": "Important notes:",
+          "dueDate": "2026-03-29",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993277
+        },
+        {
+          "uid": "event-assignment-2753993",
+          "title": "Before Class Activity: 7.12-7.15 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-03-30",
+          "dueTime": "8:50 AM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993278
+        },
+        {
+          "uid": "event-assignment-2788998",
+          "title": "3/30/26 RHYTHM: GUEST ARTIST [S2026-MUSIC-1020]",
+          "course": "Enjoy the live demonstrations of historical instruments today!",
+          "dueDate": "2026-03-30",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993279
+        },
+        {
+          "uid": "event-assignment-2724423",
+          "title": "Homework 09-A [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-03-31",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993280
+        },
+        {
+          "uid": "event-assignment-2753999",
+          "title": "Before Class Activity: 7.16 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-04-01",
+          "dueTime": "8:50 AM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993281
+        },
+        {
+          "uid": "event-assignment-2790195",
+          "title": "4/1/26 HARMONY: How do you create harmony? [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-01",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993282
+        },
+        {
+          "uid": "event-assignment-2753952",
+          "title": "After Class Activity: Do all CA/zyLabs 7.16 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-04-01",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993283
+        },
+        {
+          "uid": "event-assignment-2703223",
+          "title": "weeks 1 to 7 late homework [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-04-01",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993284
+        },
+        {
+          "uid": "event-assignment-2703238",
+          "title": "wk8hw (late) [S2026-COM S-1060]",
+          "course": "Important notes:",
+          "dueDate": "2026-04-01",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993285
+        },
+        {
+          "uid": "event-assignment-2724421",
+          "title": "Homework 10-A [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-02",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993286
+        },
+        {
+          "uid": "event-assignment-2753985",
+          "title": "Before Class Activity: 8.1-8.4 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-04-03",
+          "dueTime": "8:50 AM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993287
+        },
+        {
+          "uid": "event-assignment-2716315",
+          "title": "4/3/26 HARMONY: When did music get complicated? [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-03",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993288
+        },
+        {
+          "uid": "event-assignment-2753955",
+          "title": "After Class Activity: Do all CA/zyLabs 8.1-8.4 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-04-03",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993289
+        },
+        {
+          "uid": "event-assignment-2716339",
+          "title": "HARMONY Unit EXTRA CREDIT: Cover Your Favorite Song Spotify Playlist [S2026-MUSIC-1020]",
+          "course": "What's a cover you may ask? Wikipedia says: \"In popular music, a cover version, ",
+          "dueDate": "2026-04-03",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993290
+        },
+        {
+          "uid": "event-assignment-2791179",
+          "title": "Team Registration [2026 Applied AI]",
+          "course": "Submit your team's completed plan from the MVP & Project Planning activity. The ",
+          "dueDate": "2026-04-03",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993291
+        },
+        {
+          "uid": "event-assignment-2724422",
+          "title": "Homework 10-B [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-05",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993292
+        },
+        {
+          "uid": "event-assignment-2703143",
+          "title": "Chapter 9 Quiz [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-04-05",
+          "difficulty": "medium",
+          "type": "quiz",
+          "completed": false,
+          "id": 1776210993293
+        },
+        {
+          "uid": "event-assignment-2703215",
+          "title": "WK9HW (Assignment Drop Box) [S2026-COM S-1060]",
+          "course": "Important notes:",
+          "dueDate": "2026-04-05",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993294
+        },
+        {
+          "uid": "event-assignment-2753994",
+          "title": "Before Class Activity: 8.5-8.7 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-04-06",
+          "dueTime": "8:50 AM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993295
+        },
+        {
+          "uid": "event-assignment-2716333",
+          "title": "4/6/26 HARMONY: What kind of music would you have heard on the Mayflower? [S2026-MUSIC-1020]",
+          "course": "Enjoy learning about the roots of popular music. It all starts here.",
+          "dueDate": "2026-04-06",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993296
+        },
+        {
+          "uid": "event-assignment-2716358",
+          "title": "HARMONY Unit Read Up! Chapter 3.1: The Baroque Era: the Birth of Harmony [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-06",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993297
+        },
+        {
+          "uid": "event-assignment-2716359",
+          "title": "HARMONY Unit Read Up! Chapter 3.2: Intervals, Triads, and Progressions, the Building Blocks of Harmony [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-06",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993298
+        },
+        {
+          "uid": "event-assignment-2716360",
+          "title": "HARMONY Unit Read Up! Chapter 3.3: American Protestant Music, the Voice of Harmony [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-06",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993299
+        },
+        {
+          "uid": "event-assignment-2716361",
+          "title": "HARMONY Unit Read Up! Chapter 3.4: American Roots Music, the Lifeblood of Harmony [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-06",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993300
+        },
+        {
+          "uid": "event-assignment-2716362",
+          "title": "HARMONY Unit Read Up! Chapter 3.5: The Jewish Diaspora, the Work of Harmony [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-06",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993301
+        },
+        {
+          "uid": "event-assignment-2724424",
+          "title": "Homework 10-C [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-07",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993302
+        },
+        {
+          "uid": "event-assignment-2791600",
+          "title": "Before Class Activity: Do All PAs 8.8 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-04-08",
+          "dueTime": "8:50 AM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993303
+        },
+        {
+          "uid": "event-assignment-2716330",
+          "title": "4/8/26 TIMBRE: Why does a trumpet sound like a trumpet? [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-08",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993304
+        },
+        {
+          "uid": "event-assignment-2753957",
+          "title": "After Class Activity: Do all CA/zyLabs 8.5-8.7 [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-04-08",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993305
+        },
+        {
+          "uid": "event-assignment-2703239",
+          "title": "wk9hw (late) [S2026-COM S-1060]",
+          "course": "Important notes:",
+          "dueDate": "2026-04-08",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993306
+        },
+        {
+          "uid": "event-assignment-2724427",
+          "title": "Homework 11-A [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-09",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993307
+        },
+        {
+          "uid": "event-assignment-2716305",
+          "title": "4/10/26 TIMBRE: What can a face tell you?  [S2026-MUSIC-1020]",
+          "course": "We are conducting a bit on an experiment today and I can't wait to tally the res",
+          "dueDate": "2026-04-10",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993308
+        },
+        {
+          "uid": "event-assignment-2714228",
+          "title": "Learning Strategies Inventory 2 [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-10",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993309
+        },
+        {
+          "uid": "event-assignment-2724430",
+          "title": "Homework 11-B [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-12",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993310
+        },
+        {
+          "uid": "event-assignment-2703136",
+          "title": "Chapter 10 Quiz [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-04-12",
+          "difficulty": "medium",
+          "type": "quiz",
+          "completed": false,
+          "id": 1776210993311
+        },
+        {
+          "uid": "event-assignment-2703225",
+          "title": "weeks 1-9 hw late [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-04-12",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993312
+        },
+        {
+          "uid": "event-assignment-2794393",
+          "title": "4/13/26 TIMBRE: What do your music preferences tell you about yourself? [S2026-MUSIC-1020]",
+          "course": "Continue with part 3 today of the effect timbre has on sound, our perception of ",
+          "dueDate": "2026-04-13",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993313
+        },
+        {
+          "uid": "event-assignment-2724425",
+          "title": "Homework 11-C [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-14",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993314
+        },
+        {
+          "uid": "event-assignment-2794977",
+          "title": "Submit Your Application for Finals [2026 Applied AI]",
+          "course": "Use the form embedded below to submit your application or go directly to this li",
+          "dueDate": "2026-04-14",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993315
+        },
+        {
+          "uid": "event-assignment-2754001",
+          "title": "Before Class Activity: 9.1-9.3 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-04-15",
+          "dueTime": "8:50 AM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993316
+        },
+        {
+          "uid": "event-assignment-2716301",
+          "title": "4/15/26 TIMBRE: What's electricity got to do with it, part 1? [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-15",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993317
+        },
+        {
+          "uid": "event-assignment-2703226",
+          "title": "weeks 3 to 9 late homework [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-04-15",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993318
+        },
+        {
+          "uid": "event-assignment-2724428",
+          "title": "Homework 12-A [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-16",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993319
+        },
+        {
+          "uid": "event-assignment-2754002",
+          "title": "Before Class Activity: 9.4-9.5 (PA) [S2026-COMS-2270]",
+          "course": "",
+          "dueDate": "2026-04-17",
+          "dueTime": "8:50 AM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993320
+        },
+        {
+          "uid": "event-assignment-2716334",
+          "title": "4/17/26 TIMBRE: What's electricity got to do with it, part 2? [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-17",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993321
+        },
+        {
+          "uid": "event-assignment-2703162",
+          "title": "CP1 (Extra Credit Project #1) [S2026-COM S-1060]",
+          "course": "This is an extra credit project. The total points of the basic version of compre",
+          "dueDate": "2026-04-17",
+          "difficulty": "medium",
+          "type": "project",
+          "completed": false,
+          "id": 1776210993322
+        },
+        {
+          "uid": "event-assignment-2791718",
+          "title": "Assignment 2 [S2026-COMS-2270]",
+          "course": "Due Sunday, April 19, 11:59pm",
+          "dueDate": "2026-04-19",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993323
+        },
+        {
+          "uid": "event-assignment-2724426",
+          "title": "Homework 12-B [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-19",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993324
+        },
+        {
+          "uid": "event-assignment-2703126",
+          "title": "Chapter 11 Quiz [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-04-19",
+          "difficulty": "medium",
+          "type": "quiz",
+          "completed": false,
+          "id": 1776210993325
+        },
+        {
+          "uid": "event-assignment-2703193",
+          "title": "WK11HW (Assignment Drop Box) [S2026-COM S-1060]",
+          "course": "Important notes:",
+          "dueDate": "2026-04-19",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993326
+        },
+        {
+          "uid": "event-assignment-2716304",
+          "title": "4/20/26 TIMBRE: Can you tell a story just with music? [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-20",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993327
+        },
+        {
+          "uid": "event-assignment-2724429",
+          "title": "Homework 12-C [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-21",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993328
+        },
+        {
+          "uid": "event-assignment-2716331",
+          "title": "4/22/26 TIMBRE: Can spinning to music melt your worries away? [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-22",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993329
+        },
+        {
+          "uid": "event-assignment-2716377",
+          "title": "TIMBRE Unit EXTRA CREDIT: The Sounds of the Rainbow [S2026-MUSIC-1020]",
+          "course": "The Sounds of the Rainbow",
+          "dueDate": "2026-04-22",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993330
+        },
+        {
+          "uid": "event-assignment-2716340",
+          "title": "TIMBRE Unit EXTRA CREDIT: What does your personality say about your taste in music? [S2026-MUSIC-1020]",
+          "course": "So, for our timbre unit we are really getting to know ourselves and what drives ",
+          "dueDate": "2026-04-22",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993331
+        },
+        {
+          "uid": "event-assignment-2716378",
+          "title": "TIMBRE Unit Read Up! Chapter 4.1: The Classical Era, the Discovery of Timbre [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-22",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993332
+        },
+        {
+          "uid": "event-assignment-2716379",
+          "title": "TIMBRE Unit Read Up! Chapter 4.2: Strings, Winds, and Percussion, the Symphony of Timbre [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-22",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993333
+        },
+        {
+          "uid": "event-assignment-2716380",
+          "title": "TIMBRE Unit Read Up! Chapter 4.3: Electricity, Guitars, and Synthesizers, the Amplification of Timbre [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-22",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993334
+        },
+        {
+          "uid": "event-assignment-2716381",
+          "title": "TIMBRE Unit Read Up! Chapter 4.4: The Indonesian Gamelan, the Shimmer of Timbre [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-22",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993335
+        },
+        {
+          "uid": "event-assignment-2716382",
+          "title": "TIMBRE Unit Read Up! Chapter 4.5: Sufi Music of Turkey, the Enchantment of Timbre [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-22",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993336
+        },
+        {
+          "uid": "event-assignment-2703224",
+          "title": "weeks 1 to 9 late homework [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-04-22",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993337
+        },
+        {
+          "uid": "event-assignment-2703231",
+          "title": "wk11hw (late) [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-04-22",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993338
+        },
+        {
+          "uid": "event-assignment-2724433",
+          "title": "Homework 13-A [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-23",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993339
+        },
+        {
+          "uid": "event-assignment-2716310",
+          "title": "4/24/26 FORM: Why do we like repetition in music?  [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-24",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993340
+        },
+        {
+          "uid": "event-assignment-2703158",
+          "title": "#2ExtraCredit(PHPSQL_Ch9JobPage) [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-04-24",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993341
+        },
+        {
+          "uid": "event-assignment-2724435",
+          "title": "Homework 13-B [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-26",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993342
+        },
+        {
+          "uid": "event-assignment-2703130",
+          "title": "Chapter 12 Quiz [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-04-26",
+          "difficulty": "medium",
+          "type": "quiz",
+          "completed": false,
+          "id": 1776210993343
+        },
+        {
+          "uid": "event-assignment-2703195",
+          "title": "WK12HW (Assignment Drop Box) [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-04-26",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993344
+        },
+        {
+          "uid": "event-assignment-2716324",
+          "title": "4/27/26 FORM: What is so special about \"Bohemian Rhapsody\" [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-27",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993345
+        },
+        {
+          "uid": "event-assignment-2724431",
+          "title": "Homework 13-C [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-28",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993346
+        },
+        {
+          "uid": "event-assignment-2716298",
+          "title": "4/29/26 FORM: Do you like rom-coms? [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-04-29",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993347
+        },
+        {
+          "uid": "event-assignment-2703227",
+          "title": "wk 1 to 12 hw (late) [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-04-29",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993348
+        },
+        {
+          "uid": "event-assignment-2703232",
+          "title": "wk12hw (late) [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-04-29",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993349
+        },
+        {
+          "uid": "event-assignment-2714215",
+          "title": "Exam 3 Q01-Q06 (Mult-Choice) [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-30",
+          "dueTime": "6:45 PM",
+          "difficulty": "medium",
+          "type": "exam",
+          "completed": false,
+          "id": 1776210993350
+        },
+        {
+          "uid": "event-assignment-2714216",
+          "title": "Exam 3 Q07 (Work-Out) [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-30",
+          "dueTime": "6:45 PM",
+          "difficulty": "medium",
+          "type": "exam",
+          "completed": false,
+          "id": 1776210993351
+        },
+        {
+          "uid": "event-assignment-2714217",
+          "title": "Exam 3 Q08 (Work-Out) [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-30",
+          "dueTime": "6:45 PM",
+          "difficulty": "medium",
+          "type": "exam",
+          "completed": false,
+          "id": 1776210993352
+        },
+        {
+          "uid": "event-assignment-2714218",
+          "title": "Exam 3 Q09 (Work-Out) [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-30",
+          "dueTime": "6:45 PM",
+          "difficulty": "medium",
+          "type": "exam",
+          "completed": false,
+          "id": 1776210993353
+        },
+        {
+          "uid": "event-assignment-2714219",
+          "title": "Exam 3 Q10 (Work-Out) [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-04-30",
+          "dueTime": "6:45 PM",
+          "difficulty": "medium",
+          "type": "exam",
+          "completed": false,
+          "id": 1776210993354
+        },
+        {
+          "uid": "event-assignment-2716318",
+          "title": "5/1/26 FORM: Why don't I like 20th century music?  [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-05-01",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993355
+        },
+        {
+          "uid": "event-assignment-2703197",
+          "title": "WK13HW (Assignment Drop Box) [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-05-01",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993356
+        },
+        {
+          "uid": "event-assignment-2703138",
+          "title": "Chapter 13 Quiz [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-05-03",
+          "difficulty": "medium",
+          "type": "quiz",
+          "completed": false,
+          "id": 1776210993357
+        },
+        {
+          "uid": "event-assignment-2716319",
+          "title": "5/4/26 FORM: Was American music racist? [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-05-04",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993358
+        },
+        {
+          "uid": "event-assignment-2716312",
+          "title": "5/6/26 FORM: Where does jazz come from? [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-05-06",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993359
+        },
+        {
+          "uid": "event-assignment-2739704",
+          "title": "5/6/26 Guest Artist: What is a fugue? [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-05-06",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993360
+        },
+        {
+          "uid": "event-assignment-2703217",
+          "title": "Weeks 1 to 12 late homework [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-05-06",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993361
+        },
+        {
+          "uid": "event-assignment-2724434",
+          "title": "Homework 14-A [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-05-07",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993362
+        },
+        {
+          "uid": "event-assignment-2716293",
+          "title": "5/8/26 FORM Where is music going from here? [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-05-08",
+          "dueTime": "3:30 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993363
+        },
+        {
+          "uid": "event-assignment-2716341",
+          "title": "FORM Unit EXTRA CREDIT: Make a new playlist [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-05-08",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993364
+        },
+        {
+          "uid": "event-assignment-2716349",
+          "title": "FORM Unit Read Up! Chapter 5.1: Repetition, Contrast, and Variation, the Building Blocks of Form [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-05-08",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993365
+        },
+        {
+          "uid": "event-assignment-2716350",
+          "title": "FORM Unit Read Up! Chapter 5.2: The Romantic Era, the New Moods in Form [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-05-08",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993366
+        },
+        {
+          "uid": "event-assignment-2716351",
+          "title": "FORM Unit Read Up! Chapter 5.3: The 20th Century, the Opposition to Form [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-05-08",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993367
+        },
+        {
+          "uid": "event-assignment-2716352",
+          "title": "FORM Unit Read Up! Chapter 5.4: American Popular Music, the Basics of Form [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-05-08",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993368
+        },
+        {
+          "uid": "event-assignment-2716353",
+          "title": "FORM Unit Read Up! Chapter 5.5: Jazz, the Innovation of Form [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-05-08",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993369
+        },
+        {
+          "uid": "event-assignment-2716356",
+          "title": "GET COZY GO TO A CONCERT LIVE Concert Reviews #3-4 [S2026-MUSIC-1020]",
+          "course": "",
+          "dueDate": "2026-05-08",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993370
+        },
+        {
+          "uid": "event-assignment-2703199",
+          "title": "WK14HW [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-05-08",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993371
+        },
+        {
+          "uid": "event-assignment-2724432",
+          "title": "Homework 15-A [S2026-MATH-2650]",
+          "course": "",
+          "dueDate": "2026-05-09",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993372
+        },
+        {
+          "uid": "event-assignment-2703117",
+          "title": "Final Exam (S26) [S2026-COM S-1060]",
+          "course": "",
+          "dueDate": "2026-05-14",
+          "difficulty": "medium",
+          "type": "exam",
+          "completed": false,
+          "id": 1776210993373
+        },
+        {
+          "uid": "event-assignment-2676800",
+          "title": "Attestation [S2026-ORIEN-0000]",
+          "course": "To record your participation in the course you need to answer the following one ",
+          "dueDate": "2026-05-15",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993374
+        },
+        {
+          "uid": "event-assignment-2527618",
+          "title": "Attestation [F2025-ORIEN-0000-FA]",
+          "course": "To record your participation in the course you need to answer the following one ",
+          "dueDate": "2026-06-29",
+          "dueTime": "11:00 PM",
+          "difficulty": "medium",
+          "type": "homework",
+          "completed": false,
+          "id": 1776210993375
+        }
+      ],
+      "events": [],
+      "createdAt": "2026-04-14T20:21:25.790Z",
+      "icsUrl": "https://canvas.iastate.edu/feeds/calendars/user_4KkzHs23Rq12QczKdNgGjXLChvgMsVZNuadeJa5L.ics"
     }
   ]
 }

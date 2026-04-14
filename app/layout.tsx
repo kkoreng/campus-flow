@@ -19,9 +19,9 @@ export const metadata: Metadata = {
   title: "CampusFlow",
   description: "Stay on top of your coursework",
   icons: {
-    icon: "/campus-flow-logo.svg",
-    shortcut: "/campus-flow-logo.svg",
-    apple: "/campus-flow-logo.svg",
+    icon: "/logo.svg",
+    shortcut: "/logo.svg",
+    apple: "/logo.svg",
   },
 };
 

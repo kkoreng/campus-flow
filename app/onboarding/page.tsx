@@ -9,7 +9,7 @@ import SearchSelect from '../components/SearchSelect'
 import { SCHOOLS } from '../lib/schools'
 import { MAJORS } from '../lib/majors'
 
-const SEASONS: Season[] = ['Fall', 'Spring', 'Summer']
+const SEASONS: Season[] = ['Fall', 'Spring', 'Summer', 'Winter']
 const YEARS = [1, 2, 3, 4]
 const DIFFICULTY_LABELS: Record<CourseDifficulty, string> = {
   easy: 'Easy',
@@ -179,11 +179,11 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* Step 2 — Earned credits */}
+        {/* Step 2 — Completed courses */}
         {step === 2 && (
           <div className="space-y-6">
             <div>
-              <h1 className="text-2xl font-semibold tracking-[-0.03em] text-slate-900 dark:text-white">Earned credits</h1>
+              <h1 className="text-2xl font-semibold tracking-[-0.03em] text-slate-900 dark:text-white">Completed courses</h1>
               <p className="mt-1 text-sm text-slate-400">Add completed classes with their credit hours. Skip if none yet.</p>
             </div>
             <div className="space-y-3">
@@ -198,9 +198,9 @@ export default function OnboardingPage() {
                 />
                 <input
                   type="number"
-                  min="0.5"
+                  min="0"
                   max="12"
-                  step="0.5"
+                  step="1"
                   value={completedCredits}
                   onChange={e => setCompletedCredits(e.target.value)}
                   placeholder="Credits"

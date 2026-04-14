@@ -101,10 +101,47 @@ export default function InsightsPanel({ userId, profile }: Props) {
 
   const today = new Date().toISOString().split('T')[0]
   const total = assignments.length
-  const past = assignments.filter(a => a.dueDate < today)
-  const upcoming = assignments.filter(a => !a.completed && a.dueDate >= today)
-  const markedEarly = assignments.filter(a => a.completed && a.dueDate >= today)
-  const onTimeRate = past.length > 0 ? Math.round((markedEarly.length / past.length) * 100) : null
+  const completed = assignments.filter((assignment) => assignment.completed)
+  const overdue = assignments.filter((assignment) => !assignment.completed && assignment.dueDate < today)
+  const upcoming = assignments.filter((assignment) => !assignment.completed && assignment.dueDate >= today)
+  const completionRate = total > 0 ? Math.round((completed.length / total) * 100) : null
+  const statusBreakdown = [
+    { label: 'Completed', count: completed.length, bar: 'bg-emerald-500' },
+    { label: 'Active', count: upcoming.length, bar: 'bg-blue-500' },
+    { label: 'Overdue', count: overdue.length, bar: 'bg-rose-500' },
+  ]
+  const difficultyBreakdown = (['easy', 'medium', 'hard'] as const)
+    .map((difficulty) => ({
+      difficulty,
+      count: assignments.filter((assignment) => assignment.difficulty === difficulty).length,
+      bar:
+        difficulty === 'hard'
+          ? 'bg-rose-500'
+          : difficulty === 'medium'
+          ? 'bg-amber-400'
+          : 'bg-emerald-500',
+    }))
+    .filter((item) => item.count > 0)
+  const pendingByCourse = Array.from(
+    upcoming.reduce((map, assignment) => {
+      const key = assignment.course.trim() || 'General'
+      map.set(key, (map.get(key) ?? 0) + 1)
+      return map
+    }, new Map<string, number>())
+  )
+    .map(([course, count]) => ({ course, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5)
+  const maxPendingCourseCount = Math.max(...pendingByCourse.map((item) => item.count), 1)
+  const completionSegments = total > 0
+    ? statusBreakdown.map((item) => ({ ...item, width: `${(item.count / total) * 100}%` }))
+    : statusBreakdown.map((item) => ({ ...item, width: '0%' }))
+  const difficultyTotal = difficultyBreakdown.reduce((sum, item) => sum + item.count, 0)
+  const difficultySegments = difficultyBreakdown.map((item) => ({
+    ...item,
+    percent: difficultyTotal > 0 ? Math.round((item.count / difficultyTotal) * 100) : 0,
+    width: difficultyTotal > 0 ? `${(item.count / difficultyTotal) * 100}%` : '0%',
+  }))
 
   return (
     <div className="space-y-8">
@@ -126,12 +163,12 @@ export default function InsightsPanel({ userId, profile }: Props) {
       </div>
 
       {/* Stats strip */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         {[
-          { label: 'On-time rate', value: onTimeRate !== null ? `${onTimeRate}%` : '—', sub: 'marked done before deadline' },
-          { label: 'Past', value: String(past.length), sub: 'auto-archived' },
+          { label: 'Completion rate', value: completionRate !== null ? `${completionRate}%` : '—', sub: 'marked done' },
+          { label: 'Completed', value: String(completed.length), sub: 'finished assignments' },
           { label: 'Upcoming', value: String(upcoming.length), sub: upcoming.length > 0 ? 'active assignments' : 'all clear' },
-          { label: 'Tracked', value: String(total), sub: 'total assignments' },
+          { label: 'Overdue', value: String(overdue.length), sub: overdue.length > 0 ? 'past due and open' : 'nothing late' },
         ].map(s => (
           <div key={s.label} className="rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/40 px-4 py-3">
             <p className="text-[10px] uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">{s.label}</p>
@@ -189,6 +226,101 @@ export default function InsightsPanel({ userId, profile }: Props) {
                     {tag}
                   </span>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {(statusBreakdown.some((item) => item.count > 0) || difficultyBreakdown.length > 0 || pendingByCourse.length > 0) && (
+            <div className="grid gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+              <div className="space-y-4">
+                <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-5 dark:border-slate-800 dark:bg-slate-900/35">
+                  <div className="flex items-end justify-between gap-4">
+                    <div>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Completion Snapshot</p>
+                      <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-slate-900 dark:text-white">
+                        {completionRate !== null ? `${completionRate}%` : '—'}
+                      </p>
+                      <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">based on assignments marked done</p>
+                    </div>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">{completed.length} of {total} completed</p>
+                  </div>
+                  <div className="mt-4 flex h-3 overflow-hidden rounded-full bg-slate-200/80 dark:bg-slate-800">
+                    {completionSegments.map((item) => (
+                      <div key={item.label} className={item.bar} style={{ width: item.width }} />
+                    ))}
+                  </div>
+                  <div className="mt-4 grid grid-cols-3 gap-3">
+                    {statusBreakdown.map((item) => (
+                      <div key={item.label} className="rounded-lg bg-white/70 px-3 py-3 dark:bg-slate-950/35">
+                        <div className="flex items-center gap-2">
+                          <span className={`h-2.5 w-2.5 rounded-full ${item.bar}`} />
+                          <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">{item.label}</p>
+                        </div>
+                        <p className="mt-2 text-xl font-semibold tracking-[-0.03em] text-slate-900 dark:text-white">{item.count}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-5 dark:border-slate-800 dark:bg-slate-900/35">
+                  <div className="flex items-end justify-between gap-4">
+                    <div>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Difficulty Split</p>
+                      <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">how challenging the tracked workload looks</p>
+                    </div>
+                  </div>
+                  {difficultySegments.length > 0 ? (
+                    <>
+                      <div className="mt-4 flex h-3 overflow-hidden rounded-full bg-slate-200/80 dark:bg-slate-800">
+                        {difficultySegments.map((item) => (
+                          <div key={item.difficulty} className={item.bar} style={{ width: item.width }} />
+                        ))}
+                      </div>
+                      <div className="mt-4 grid grid-cols-3 gap-3">
+                        {difficultySegments.map((item) => (
+                          <div key={item.difficulty} className="rounded-lg bg-white/70 px-3 py-3 dark:bg-slate-950/35">
+                            <div className="flex items-center gap-2">
+                              <span className={`h-2.5 w-2.5 rounded-full ${item.bar}`} />
+                              <p className="text-[11px] font-medium capitalize text-slate-500 dark:text-slate-400">{item.difficulty}</p>
+                            </div>
+                            <p className="mt-2 text-xl font-semibold tracking-[-0.03em] text-slate-900 dark:text-white">{item.count}</p>
+                            <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{item.percent}% of tracked work</p>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <p className="mt-4 text-sm text-slate-400 dark:text-slate-500">No difficulty data yet.</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-5 dark:border-slate-800 dark:bg-slate-900/35">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Course Load</p>
+                <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">active assignments by course</p>
+                <div className="mt-5 space-y-4">
+                  {pendingByCourse.length > 0 ? pendingByCourse.map((item, index) => (
+                    <div key={item.course}>
+                      <div className="mb-2 flex items-center justify-between gap-3">
+                        <div className="flex min-w-0 items-center gap-3">
+                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-900 text-[11px] font-semibold text-white dark:bg-white dark:text-slate-900">
+                            {index + 1}
+                          </span>
+                          <p className="truncate text-sm font-medium text-slate-700 dark:text-slate-300">{item.course}</p>
+                        </div>
+                        <p className="text-sm font-semibold text-slate-900 dark:text-white">{item.count}</p>
+                      </div>
+                      <div className="h-2.5 rounded-full bg-slate-200/80 dark:bg-slate-800">
+                        <div
+                          className="h-2.5 rounded-full bg-[linear-gradient(90deg,#1f6feb,#0f766e)]"
+                          style={{ width: `${(item.count / maxPendingCourseCount) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  )) : (
+                    <p className="text-sm text-slate-400 dark:text-slate-500">No active assignments to compare.</p>
+                  )}
+                </div>
               </div>
             </div>
           )}

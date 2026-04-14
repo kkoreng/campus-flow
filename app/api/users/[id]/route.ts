@@ -24,12 +24,12 @@ export async function PATCH(
   let saved
   if (body.assignments !== undefined) {
     saved = await saveAssignments(id, body.assignments)
-  } else if (body.profile?.userNote !== undefined && Object.keys(body.profile).length === 1) {
-    // userNote-only patch — merge into existing profile
+  } else if (body.profile && Object.keys(body.profile).length === 1 && (body.profile.userNote !== undefined || body.profile.dailyNotes !== undefined)) {
+    // partial profile patch — merge into existing profile
     const existing = await (await import('../../../lib/server/userStore')).getUserById(id)
     if (!existing) return NextResponse.json({ error: 'User not found.' }, { status: 404 })
     saved = await saveUserSnapshot(id, {
-      profile: { ...existing.profile, userNote: body.profile.userNote },
+      profile: { ...existing.profile, ...body.profile },
       icsUrl: existing.icsUrl,
     })
   } else {

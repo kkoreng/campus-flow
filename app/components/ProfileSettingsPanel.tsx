@@ -6,7 +6,7 @@ import SearchSelect from './SearchSelect'
 import { SCHOOLS } from '../lib/schools'
 import { MAJORS } from '../lib/majors'
 
-const SEASONS: Season[] = ['Fall', 'Spring', 'Summer']
+const SEASONS: Season[] = ['Fall', 'Spring', 'Summer', 'Winter']
 const YEARS = [1, 2, 3, 4]
 const DIFFICULTY_LABELS: Record<CourseDifficulty, string> = { easy: 'Easy', medium: 'Medium', hard: 'Hard' }
 
@@ -22,6 +22,7 @@ interface Props {
   icsUrl: string
   onProfileChange: (profile: UserProfile) => void
   onIcsChange: (icsUrl: string) => void
+  startEditing?: boolean
 }
 
 export default function ProfileSettingsPanel({
@@ -30,8 +31,9 @@ export default function ProfileSettingsPanel({
   icsUrl,
   onProfileChange,
   onIcsChange,
+  startEditing = false,
 }: Props) {
-  const [editing, setEditing] = useState(false)
+  const [editing, setEditing] = useState(startEditing)
   const earnedCredits = profile.completedCourses.reduce((sum, course) => sum + course.credits, 0)
 
   // Edit form state
@@ -190,14 +192,16 @@ export default function ProfileSettingsPanel({
   // ── Edit mode ──
   return (
     <div className="rounded-[24px] border border-slate-200/80 bg-white/90 p-5 shadow-[0_14px_36px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:bg-slate-950/55 sm:p-6">
-      <div className="flex items-center justify-end gap-4">
-        <button
-          onClick={() => { setEditing(false); setError('') }}
-          className="shrink-0 rounded-md border border-slate-200 dark:border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-        >
-          Cancel
-        </button>
-      </div>
+      {!startEditing && (
+        <div className="flex items-center justify-end gap-4">
+          <button
+            onClick={() => { setEditing(false); setError('') }}
+            className="shrink-0 rounded-md border border-slate-200 dark:border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      )}
 
       <div className="mt-5 grid gap-3 md:grid-cols-2">
         <SearchSelect
@@ -239,7 +243,7 @@ export default function ProfileSettingsPanel({
       </div>
 
       <div className="mt-5 border-t border-slate-200 pt-5 dark:border-slate-800">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Completed Credits</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Completed Courses</p>
         <div className="mt-3 flex gap-2">
           <input
             type="text"
@@ -251,9 +255,9 @@ export default function ProfileSettingsPanel({
           />
           <input
             type="number"
-            min="0.5"
+            min="0"
             max="12"
-            step="0.5"
+            step="1"
             value={courseCredits}
             onChange={(e) => setCourseCredits(e.target.value)}
             placeholder="Credits"
@@ -332,13 +336,15 @@ export default function ProfileSettingsPanel({
         >
           {saving ? 'Saving…' : 'Save'}
         </button>
-        <button
-          type="button"
-          onClick={() => { setEditing(false); setError('') }}
-          className="rounded-md border border-slate-200 dark:border-slate-700 px-5 py-3 text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
-        >
-          Cancel
-        </button>
+        {!startEditing && (
+          <button
+            type="button"
+            onClick={() => { setEditing(false); setError('') }}
+            className="rounded-md border border-slate-200 dark:border-slate-700 px-5 py-3 text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
+          >
+            Cancel
+          </button>
+        )}
       </div>
     </div>
   )

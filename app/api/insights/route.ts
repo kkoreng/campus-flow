@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
   const openai = new OpenAI({ apiKey })
   const body = await req.json() as InsightsRequest
   const { profile, assignments } = body
+  const getCourseLabel = (course: string) => course.trim() || 'General'
 
   const today = new Date().toISOString().split('T')[0]
 
@@ -57,9 +58,9 @@ export async function POST(req: NextRequest) {
   const earnedCredits = profile.completedCourses.reduce((sum, course) => sum + course.credits, 0)
 
   // Per-course breakdown
-  const allCourses = [...new Set(assignments.map(a => a.course))]
+  const allCourses = [...new Set(assignments.map(a => getCourseLabel(a.course)))]
   const courseStats = allCourses.map(course => {
-    const all = assignments.filter(a => a.course === course)
+    const all = assignments.filter(a => getCourseLabel(a.course) === course)
     const past = all.filter(a => a.dueDate < today)
     const upcoming = all.filter(a => !a.completed && a.dueDate >= today)
     const doneEarly = all.filter(a => a.completed && a.dueDate >= today).length
@@ -94,8 +95,8 @@ export async function POST(req: NextRequest) {
 
   const upcomingContext = upcomingList.length > 0
     ? upcomingList.slice(0, 10).map(a => {
-        const days = Math.ceil((new Date(a.dueDate).getTime() - new Date(today).getTime()) / 86400000)
-        return `- [${a.type}] "${a.title}" — ${a.course} — due in ${days} day${days !== 1 ? 's' : ''}`
+      const days = Math.ceil((new Date(a.dueDate).getTime() - new Date(today).getTime()) / 86400000)
+        return `- [${a.type}] "${a.title}" — ${getCourseLabel(a.course)} — difficulty: ${a.difficulty} — due in ${days} day${days !== 1 ? 's' : ''}`
       }).join('\n')
     : 'No upcoming assignments.'
 

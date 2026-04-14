@@ -1,275 +1,276 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import type { CampusEvent, EventCategory } from '../lib/types'
+import { useEffect, useMemo, useState } from 'react'
+import type { Assignment, UserProfile } from '../lib/types'
 
-const CAT_META: Record<EventCategory, { label: string; cls: string; dot: string }> = {
-  academic: { label: 'Academic', dot: 'bg-indigo-500',  cls: 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 ring-1 ring-indigo-200 dark:ring-indigo-800' },
-  career:   { label: 'Career',   dot: 'bg-violet-500', cls: 'bg-violet-50 dark:bg-violet-950/60 text-violet-600 dark:text-violet-400 ring-1 ring-violet-200 dark:ring-violet-800' },
-  social:   { label: 'Social',   dot: 'bg-amber-400',  cls: 'bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 ring-1 ring-amber-200 dark:ring-amber-800' },
-  sports:   { label: 'Sports',   dot: 'bg-emerald-500',cls: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 ring-1 ring-emerald-200 dark:ring-emerald-800' },
-  club:     { label: 'Club',     dot: 'bg-sky-500',    cls: 'bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 ring-1 ring-sky-200 dark:ring-sky-800' },
-  other:    { label: 'Other',    dot: 'bg-slate-400',  cls: 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 ring-1 ring-slate-200 dark:ring-slate-700' },
+interface Props {
+  userId: string
+  profile: UserProfile
+  onProfileChange: (profile: UserProfile) => void
 }
 
-const CATEGORIES: EventCategory[] = ['academic', 'career', 'social', 'sports', 'club', 'other']
+const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
-function daysUntil(date: string) {
-  const today = new Date(); today.setHours(0, 0, 0, 0)
-  const d = new Date(date); d.setHours(0, 0, 0, 0)
-  return Math.ceil((d.getTime() - today.getTime()) / 86400000)
+function toDateKey(date: Date) {
+  return date.toLocaleDateString('en-CA')
 }
 
-function formatDate(date: string) {
-  const days = daysUntil(date)
-  const label = new Date(date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
-  if (days === 0) return `Today`
-  if (days === 1) return `Tomorrow`
-  if (days < 0) return label
-  return label
+function sameMonth(a: Date, b: Date) {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth()
 }
 
-export default function EventPanel({ userId }: { userId: string }) {
-  const [events, setEvents] = useState<CampusEvent[]>([])
-  const [showForm, setShowForm] = useState(false)
-  const [catFilter, setCatFilter] = useState<EventCategory | 'all'>('all')
-  const [expanded, setExpanded] = useState<number | null>(null)
+function startOfCalendarMonth(value: Date) {
+  const first = new Date(value.getFullYear(), value.getMonth(), 1)
+  const start = new Date(first)
+  start.setDate(first.getDate() - first.getDay())
+  return start
+}
 
-  // form state
-  const [fTitle, setFTitle] = useState('')
-  const [fDate, setFDate] = useState('')
-  const [fTime, setFTime] = useState('')
-  const [fLocation, setFLocation] = useState('')
-  const [fCategory, setFCategory] = useState<EventCategory>('academic')
-  const [fDesc, setFDesc] = useState('')
-  const [fError, setFError] = useState('')
+function buildCalendarDays(value: Date) {
+  const start = startOfCalendarMonth(value)
+  return Array.from({ length: 42 }, (_, index) => {
+    const date = new Date(start)
+    date.setDate(start.getDate() + index)
+    return date
+  })
+}
+
+function getCourseLabel(course: string) {
+  return course.trim() || 'General'
+}
+
+function getDifficultyAccent(difficulty: Assignment['difficulty']) {
+  if (difficulty === 'hard') return 'bg-rose-500'
+  if (difficulty === 'medium') return 'bg-amber-400'
+  return 'bg-emerald-400'
+}
+
+export default function EventPanel({ userId, profile, onProfileChange }: Props) {
+  const [assignments, setAssignments] = useState<Assignment[]>([])
+  const [month, setMonth] = useState(() => new Date())
+  const [selectedDate, setSelectedDate] = useState(() => toDateKey(new Date()))
+  const [note, setNote] = useState(profile.dailyNotes?.[toDateKey(new Date())] ?? '')
+  const [saving, setSaving] = useState(false)
+  const [status, setStatus] = useState('')
 
   useEffect(() => {
     let cancelled = false
 
     async function loadUser() {
       const res = await fetch(`/api/users/${userId}`, { cache: 'no-store' })
-      if (!res.ok) return
+      if (!res.ok || cancelled) return
       const data = await res.json()
       if (cancelled) return
-      setEvents(data.user.events ?? [])
+      setAssignments((data.user.assignments ?? []).map((assignment: Assignment) => ({
+        ...assignment,
+        difficulty: assignment.difficulty ?? 'medium',
+      })))
     }
 
     void loadUser()
-
-    return () => {
-      cancelled = true
-    }
+    return () => { cancelled = true }
   }, [userId])
 
-  function remove(id: number) {
-    setEvents(prev => prev.filter(e => e.id !== id))
+  useEffect(() => {
+    setNote(profile.dailyNotes?.[selectedDate] ?? '')
+    setStatus('')
+  }, [profile.dailyNotes, selectedDate])
+
+  const monthDays = useMemo(() => buildCalendarDays(month), [month])
+  const assignmentsByDate = useMemo(() => {
+    const grouped = new Map<string, Assignment[]>()
+    for (const assignment of assignments) {
+      const key = assignment.dueDate
+      const current = grouped.get(key) ?? []
+      current.push(assignment)
+      grouped.set(key, current)
+    }
+    return grouped
+  }, [assignments])
+
+  const selectedAssignments = assignmentsByDate.get(selectedDate) ?? []
+  const selectedDateLabel = new Date(`${selectedDate}T12:00:00`).toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  })
+
+  async function saveNote() {
+    setSaving(true)
+    setStatus('')
+    try {
+      const nextDailyNotes = {
+        ...(profile.dailyNotes ?? {}),
+        [selectedDate]: note.trim(),
+      }
+
+      if (!note.trim()) {
+        delete nextDailyNotes[selectedDate]
+      }
+
+      const res = await fetch(`/api/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile: { dailyNotes: nextDailyNotes } }),
+      })
+      if (!res.ok) throw new Error()
+      onProfileChange({ ...profile, dailyNotes: nextDailyNotes })
+      setStatus('Saved.')
+    } catch {
+      setStatus('Failed to save.')
+    } finally {
+      setSaving(false)
+    }
   }
 
-  function submit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!fTitle.trim()) { setFError('Title required'); return }
-    if (!fDate) { setFError('Date required'); return }
-    setFError('')
-    setEvents(prev => [...prev, {
-      id: Date.now(),
-      title: fTitle.trim(),
-      date: fDate,
-      time: fTime || undefined,
-      location: fLocation.trim() || undefined,
-      category: fCategory,
-      description: fDesc.trim() || undefined,
-    }])
-    setFTitle(''); setFDate(''); setFTime(''); setFLocation(''); setFDesc('')
-    setShowForm(false)
+  function moveMonth(direction: -1 | 1) {
+    setMonth((current) => new Date(current.getFullYear(), current.getMonth() + direction, 1))
   }
-
-  const today = new Date().toISOString().split('T')[0]
-
-  const filtered = events
-    .filter(e => catFilter === 'all' || e.category === catFilter)
-    .filter(e => e.date >= today)
-    .sort((a, b) => a.date.localeCompare(b.date))
 
   return (
     <div className="space-y-6">
-
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <button
-              onClick={() => setCatFilter('all')}
-              className={`px-3 py-2 rounded-full text-xs font-medium transition-all ${
-                catFilter === 'all'
-                  ? 'bg-slate-800 dark:bg-white text-white dark:text-slate-900'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
-              }`}
-            >
-              All
-            </button>
-            {CATEGORIES.map(c => (
-              <button
-                key={c}
-                onClick={() => setCatFilter(catFilter === c ? 'all' : c)}
-                className={`px-3 py-2 rounded-full text-xs font-medium transition-all ${
-                  catFilter === c ? CAT_META[c].cls + ' !bg-opacity-100' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
-                }`}
-              >
-                {CAT_META[c].label}
-              </button>
-            ))}
-          </div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex min-w-0 flex-1 items-center gap-3">
+          <p className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+            Calendar
+          </p>
+          <div className="h-px flex-1 bg-slate-200 dark:bg-slate-800" />
+        </div>
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => setShowForm(v => !v)}
-            className="flex items-center justify-center gap-1.5 rounded-2xl bg-slate-950 px-4 py-3 text-xs font-medium text-white dark:bg-white dark:text-slate-950 transition-colors shrink-0"
+            onClick={() => moveMonth(-1)}
+            className="h-8 w-8 rounded-full border border-slate-200 text-slate-500 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
+            aria-label="Previous month"
           >
-            <span className="text-base leading-none">{showForm ? '−' : '+'}</span>
-            Add Event
+            ←
+          </button>
+          <p className="min-w-32 text-center text-sm font-medium text-slate-700 dark:text-slate-300">
+            {month.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+          </p>
+          <button
+            onClick={() => moveMonth(1)}
+            className="h-8 w-8 rounded-full border border-slate-200 text-slate-500 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
+            aria-label="Next month"
+          >
+            →
           </button>
         </div>
       </div>
 
-      {/* Add form */}
-      {showForm && (
-        <div className="rounded-[24px] border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/50 p-4">
-          <form onSubmit={submit} className="space-y-3">
-            <input
-              autoFocus
-              type="text"
-              value={fTitle}
-              onChange={e => { setFTitle(e.target.value); setFError('') }}
-              placeholder="Event title"
-              className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            />
-            <div className="grid grid-cols-2 gap-3">
-              <input
-                type="date"
-                value={fDate}
-                min={today}
-                onChange={e => { setFDate(e.target.value); setFError('') }}
-                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              />
-              <input
-                type="text"
-                value={fTime}
-                onChange={e => setFTime(e.target.value)}
-                placeholder="Time (e.g. 3:00 PM)"
-                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              />
-              <input
-                type="text"
-                value={fLocation}
-                onChange={e => setFLocation(e.target.value)}
-                placeholder="Location (optional)"
-                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              />
-              <select
-                value={fCategory}
-                onChange={e => setFCategory(e.target.value as EventCategory)}
-                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              >
-                {CATEGORIES.map(c => <option key={c} value={c}>{CAT_META[c].label}</option>)}
-              </select>
-            </div>
-            <textarea
-              value={fDesc}
-              onChange={e => setFDesc(e.target.value)}
-              placeholder="Description (optional)"
-              rows={2}
-              className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
-            />
-            {fError && <p className="text-xs text-rose-500">{fError}</p>}
-            <div className="flex gap-2">
-              <button type="submit" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors">
-                Add
-              </button>
-              <button type="button" onClick={() => { setShowForm(false); setFError('') }} className="px-3 py-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-sm transition-colors">
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.45fr)_minmax(300px,0.9fr)]">
+        <div className="overflow-hidden rounded-[28px] border border-slate-200/80 bg-white/80 dark:border-slate-800 dark:bg-slate-950/55">
+          <div className="grid grid-cols-7 border-b border-slate-100 dark:border-slate-800">
+            {WEEKDAY_LABELS.map((label) => (
+              <div key={label} className="px-3 py-3 text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
+                {label}
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-7">
+            {monthDays.map((date) => {
+              const dateKey = toDateKey(date)
+              const items = assignmentsByDate.get(dateKey) ?? []
+              const isCurrentMonth = sameMonth(date, month)
+              const isSelected = dateKey === selectedDate
+              const isToday = dateKey === toDateKey(new Date())
 
-      {/* Event list */}
-      {filtered.length === 0 ? (
-        <div className="rounded-[24px] border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-950/50 py-16 text-center">
-          <p className="text-sm text-slate-400 dark:text-slate-600">No upcoming events</p>
-        </div>
-      ) : (
-        <div className="space-y-2">
-          {filtered.map(ev => {
-            const days = daysUntil(ev.date)
-            const isOpen = expanded === ev.id
-            return (
-              <div
-                key={ev.id}
-                className="rounded-[24px] border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/50 overflow-hidden"
-              >
-                <div
-                  className="group flex items-start gap-3 px-4 py-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
-                  onClick={() => setExpanded(isOpen ? null : ev.id)}
+              return (
+                <button
+                  key={dateKey}
+                  onClick={() => setSelectedDate(dateKey)}
+                  className={`relative min-h-[118px] border-b border-r border-slate-100 px-3 py-2 text-left transition-colors last:border-r-0 dark:border-slate-800 ${
+                    isSelected
+                      ? 'bg-blue-50/70 dark:bg-blue-950/20'
+                      : 'hover:bg-slate-50 dark:hover:bg-slate-900/40'
+                  }`}
                 >
-                  {/* Category dot */}
-                  <div className="flex flex-col items-center gap-1 shrink-0 pt-0.5">
-                    <div className={`w-2 h-2 rounded-full ${CAT_META[ev.category].dot}`} />
-                  </div>
+                  <span className={`absolute left-3 top-2 inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium ${
+                    isToday
+                      ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
+                      : isCurrentMonth
+                      ? 'text-slate-700 dark:text-slate-300'
+                      : 'text-slate-300 dark:text-slate-700'
+                  }`}>
+                    {date.getDate()}
+                  </span>
+                  {items.length > 0 && (
+                    <span className="absolute right-3 top-3 text-[10px] text-slate-400 dark:text-slate-500">{items.length}</span>
+                  )}
 
-                  {/* Main content */}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">{ev.title}</p>
-                    <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                      <span className="text-xs text-slate-400 dark:text-slate-500">
-                        {formatDate(ev.date)}
-                        {ev.time && <> · {ev.time}</>}
-                      </span>
-                      {ev.location && (
-                        <span className="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1">
-                          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
-                          </svg>
-                          {ev.location}
-                        </span>
-                      )}
+                  <div className="pt-8 space-y-1.5">
+                    {items.slice(0, 2).map((assignment) => (
+                      <div
+                        key={assignment.id}
+                        className={`flex items-center gap-2 rounded-md px-2 py-1 text-[11px] ${
+                          assignment.completed
+                            ? 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500'
+                            : 'bg-white/80 text-slate-700 dark:bg-slate-900/70 dark:text-slate-300'
+                        }`}
+                      >
+                        <span className={`h-2 w-2 rounded-full ${getDifficultyAccent(assignment.difficulty)}`} />
+                        <span className="truncate">{assignment.title}</span>
+                      </div>
+                    ))}
+                    {items.length > 2 && (
+                      <p className="px-1 text-[10px] text-slate-400 dark:text-slate-500">+{items.length - 2} more</p>
+                    )}
+                  </div>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        <div className="rounded-[28px] border border-slate-200/80 bg-white/90 p-5 dark:border-slate-800 dark:bg-slate-950/55">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Selected Day</p>
+          <h3 className="mt-2 text-xl font-semibold tracking-[-0.03em] text-slate-900 dark:text-white">{selectedDateLabel}</h3>
+
+          <div className="mt-5">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">Assignments</p>
+            {selectedAssignments.length > 0 ? (
+              <div className="mt-3 space-y-2">
+                {selectedAssignments.map((assignment) => (
+                  <div key={assignment.id} className="rounded-xl border border-slate-100 bg-slate-50/80 px-4 py-3 dark:border-slate-800 dark:bg-slate-900/50">
+                    <div className="flex items-start gap-3">
+                      <span className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${getDifficultyAccent(assignment.difficulty)}`} />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-slate-800 dark:text-slate-200">{assignment.title}</p>
+                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                          {getCourseLabel(assignment.course)}
+                          {assignment.dueTime ? ` · ${assignment.dueTime}` : ''}
+                        </p>
+                      </div>
                     </div>
                   </div>
-
-                  {/* Right */}
-                  <div className="flex items-center gap-2 shrink-0">
-                    {days === 0 && <span className="text-[10px] font-semibold text-rose-500">Today</span>}
-                    {days === 1 && <span className="text-[10px] font-medium text-amber-500">Tomorrow</span>}
-                    {days > 1 && <span className="text-[10px] text-slate-400 dark:text-slate-600">{days}d</span>}
-                    <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md ${CAT_META[ev.category].cls}`}>
-                      {CAT_META[ev.category].label}
-                    </span>
-                    <svg
-                      width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round"
-                      className={`text-slate-300 dark:text-slate-600 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-                    >
-                      <polyline points="6 9 12 15 18 9" />
-                    </svg>
-                    <button
-                      onClick={e => { e.stopPropagation(); remove(ev.id) }}
-                      className="opacity-0 group-hover:opacity-100 w-5 h-5 flex items-center justify-center rounded-md text-slate-300 dark:text-slate-600 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-all"
-                    >
-                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round">
-                        <path d="M18 6L6 18M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Expanded description */}
-                {isOpen && ev.description && (
-                  <div className="px-4 pb-3 border-t border-slate-100 dark:border-slate-800 pt-2.5 bg-slate-50 dark:bg-slate-800/30">
-                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{ev.description}</p>
-                  </div>
-                )}
+                ))}
               </div>
-            )
-          })}
+            ) : (
+              <p className="mt-3 text-sm text-slate-400 dark:text-slate-500">No assignments due.</p>
+            )}
+          </div>
+
+          <div className="mt-6 border-t border-slate-100 pt-5 dark:border-slate-800">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">Quick Note</p>
+            <textarea
+              value={note}
+              onChange={(event) => { setNote(event.target.value); setStatus('') }}
+              rows={5}
+              placeholder="Add a short note for this day..."
+              className="mt-3 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            />
+            <div className="mt-3 flex items-center gap-3">
+              <button
+                onClick={saveNote}
+                disabled={saving}
+                className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60 dark:bg-white dark:text-slate-900"
+              >
+                {saving ? 'Saving…' : 'Save note'}
+              </button>
+              {status && <p className={`text-xs ${status === 'Saved.' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500'}`}>{status}</p>}
+            </div>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   )
 }

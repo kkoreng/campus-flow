@@ -1,8 +1,8 @@
 'use client'
 
 import type { ReactElement } from 'react'
-import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import { consumeFlashMessage } from '../lib/auth'
@@ -16,6 +16,10 @@ import ProgressPanel from './ProgressPanel'
 import LogoIcon from './LogoIcon'
 
 type Tab = 'dashboard' | 'assignments' | 'events' | 'insights' | 'settings'
+
+function isTab(value: string | null): value is Tab {
+  return value === 'dashboard' || value === 'assignments' || value === 'events' || value === 'insights' || value === 'settings'
+}
 
 const TABS: { id: Tab; label: string; icon: ReactElement }[] = [
   {
@@ -40,7 +44,7 @@ const TABS: { id: Tab; label: string; icon: ReactElement }[] = [
   },
   {
     id: 'events',
-    label: 'Events',
+    label: 'Calendar',
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
         <rect x="3" y="5" width="18" height="16" rx="2" />
@@ -147,14 +151,18 @@ export default function Dashboard() {
   const { user, loading, logout } = useAuth()
   const { theme, toggle } = useTheme()
   const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
   const contentRef = useRef<HTMLDivElement>(null)
-  const [tab, setTab] = useState<Tab>('dashboard')
   const [profileVersion, setProfileVersion] = useState(0)
   const [analysisVersion, setAnalysisVersion] = useState(0)
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [icsUrl, setIcsUrl] = useState('')
   const [flashMessage, setFlashMessage] = useState<string | null>(getInitialFlashMessage)
+  const handleAssignmentsChange = useCallback(() => {
+    setAnalysisVersion(v => v + 1)
+  }, [])
 
   useEffect(() => {
     if (!loading && !user) router.replace('/login')
@@ -173,7 +181,7 @@ export default function Dashboard() {
       if (cancelled) return
       setProfile(data.user.profile ?? {
         school: '', major: '', currentYear: 1,
-        currentSemester: 'Fall', completedCourses: [], currentCourses: [],
+        currentSemester: 'Fall', completedCourses: [], currentCourses: [], dailyNotes: {},
       })
       setIcsUrl(data.user.icsUrl ?? '')
     }
@@ -184,16 +192,25 @@ export default function Dashboard() {
 
   if (loading || !user || !profile) return null
 
+  const tabParam = searchParams.get('tab')
+  const tab: Tab = isTab(tabParam) ? tabParam : 'dashboard'
+
+  function navigateToTab(nextTab: Tab) {
+    const nextUrl = nextTab === 'dashboard' ? pathname : `${pathname}?tab=${nextTab}`
+    router.replace(nextUrl, { scroll: false })
+  }
+
   const pendingSetup = !profile.school?.trim() || !profile.major?.trim()
   const completedCredits = profile.completedCourses.reduce((sum, course) => sum + course.credits, 0)
   const currentDateLabel = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
 
   const settingsPanel = (
     <ProfileSettingsPanel
-      key={`${user.id}-${profileVersion}`}
+      key={`${user.id}-${profileVersion}-${pendingSetup ? 'setup' : 'view'}`}
       userId={user.id}
       profile={profile}
       icsUrl={icsUrl}
+      startEditing={pendingSetup}
       onProfileChange={(next) => { setProfile(next); setProfileVersion((v) => v + 1) }}
       onIcsChange={(next) => { setIcsUrl(next); setProfileVersion((v) => v + 1) }}
     />
@@ -207,7 +224,7 @@ export default function Dashboard() {
           {/* Logo */}
           <button
             onClick={() => {
-              setTab('dashboard')
+              navigateToTab('dashboard')
               contentRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
             }}
             className="flex items-center gap-2.5 px-2 pb-4"
@@ -222,7 +239,7 @@ export default function Dashboard() {
             {TABS.map((t) => (
               <button
                 key={t.id}
-                onClick={() => setTab(t.id)}
+                onClick={() => navigateToTab(t.id)}
                 className={`w-full rounded-md px-3 py-2 text-left text-sm transition-colors ${
                   tab === t.id
                     ? 'bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-white font-medium'
@@ -285,21 +302,51 @@ export default function Dashboard() {
           {tab === 'dashboard' && (
             <div className="space-y-8">
               {pendingSetup ? (
-                <div className="grid gap-8 xl:grid-cols-3">
-                  <div className="xl:col-span-2">{settingsPanel}</div>
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500 mb-4">Getting started</p>
-                    <div className="space-y-4">
+                <div className="space-y-6">
+                  {/* Welcome guide */}
+                  <div className="rounded-[24px] border border-blue-200/70 dark:border-blue-900/50 bg-[linear-gradient(135deg,rgba(239,246,255,0.9),rgba(255,255,255,0.8))] dark:bg-[linear-gradient(135deg,rgba(30,64,175,0.15),rgba(15,23,42,0.5))] p-5 sm:p-6">
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-[linear-gradient(135deg,#1f6feb,#0f766e)] flex items-center justify-center shrink-0">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-base font-semibold text-slate-900 dark:text-white">Set up your profile to get started</p>
+                        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                          Tell us about your school, major, and courses — CampusFlow will use this to give you personalized AI recommendations and insights.
+                        </p>
+                        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5">
+                          {[
+                            { step: '1', text: 'Enter school, major & year' },
+                            { step: '2', text: 'Add completed courses & credits' },
+                            { step: '3', text: 'Sync Canvas or add assignments' },
+                          ].map(s => (
+                            <div key={s.step} className="flex items-center gap-1.5">
+                              <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-500 text-[9px] font-bold text-white">{s.step}</span>
+                              <span className="text-xs text-slate-500 dark:text-slate-400">{s.text}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-8 xl:grid-cols-3">
+                    <div className="xl:col-span-2">{settingsPanel}</div>
+                    <div className="space-y-3">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">Unlocks after setup</p>
                       {[
-                        { color: 'bg-sky-500', text: 'Save academic info' },
-                        { color: 'bg-emerald-500', text: 'Add earned credits' },
-                        { color: 'bg-violet-500', text: 'Sync Canvas or add assignments' },
-                      ].map((step, i) => (
-                        <div key={step.text} className="flex items-center gap-3">
-                          <div className={`w-5 h-5 rounded-full ${step.color} flex items-center justify-center shrink-0`}>
-                            <span className="text-[10px] font-bold text-white">{i + 1}</span>
+                        { icon: '🎯', title: 'AI Focus Recommendations', desc: 'Based on deadlines & difficulty' },
+                        { icon: '📊', title: 'Academic Insights', desc: 'Submission patterns & course health' },
+                        { icon: '⚡', title: 'Progress Tracking', desc: 'Today, this week & on-time rate' },
+                      ].map(f => (
+                        <div key={f.title} className="flex items-start gap-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-white/60 dark:bg-slate-900/30 px-4 py-3">
+                          <span className="text-base shrink-0">{f.icon}</span>
+                          <div>
+                            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{f.title}</p>
+                            <p className="text-xs text-slate-400 dark:text-slate-500">{f.desc}</p>
                           </div>
-                          <p className="text-sm text-slate-600 dark:text-slate-400">{step.text}</p>
                         </div>
                       ))}
                     </div>
@@ -362,14 +409,14 @@ export default function Dashboard() {
 
                   <ProgressPanel userId={user.id} refreshTrigger={analysisVersion} />
 
-                  <OverviewPanel userId={user.id} profile={profile} refreshTrigger={analysisVersion} onNavigate={(t) => setTab(t as Tab)} />
+                  <OverviewPanel userId={user.id} profile={profile} refreshTrigger={analysisVersion} onNavigate={(t) => navigateToTab(t as Tab)} />
                 </div>
               )}
             </div>
           )}
 
-          {tab === 'assignments' && <AssignmentPanel userId={user.id} onAssignmentsChange={() => setAnalysisVersion(v => v + 1)} />}
-          {tab === 'events' && <EventPanel userId={user.id} />}
+          {tab === 'assignments' && <AssignmentPanel userId={user.id} onAssignmentsChange={handleAssignmentsChange} />}
+          {tab === 'events' && <EventPanel userId={user.id} profile={profile} onProfileChange={(next) => setProfile(next)} />}
           {tab === 'insights' && <InsightsPanel userId={user.id} profile={profile} />}
 
           {tab === 'settings' && (

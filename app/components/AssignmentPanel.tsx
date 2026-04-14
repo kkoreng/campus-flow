@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import type { Assignment, AssignmentType } from '../lib/types'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import type { Assignment, AssignmentType, CourseDifficulty, CurrentCourse } from '../lib/types'
 import { parseICS } from '../lib/icsParser'
 
 const TYPE_META: Record<AssignmentType, { label: string; cls: string }> = {
@@ -14,6 +14,45 @@ const TYPE_META: Record<AssignmentType, { label: string; cls: string }> = {
 }
 
 const TYPES: AssignmentType[] = ['homework', 'exam', 'project', 'quiz', 'lab', 'other']
+const DIFFICULTIES: CourseDifficulty[] = ['easy', 'medium', 'hard']
+
+const DIFFICULTY_META: Record<CourseDifficulty, { label: string; cls: string; text: string }> = {
+  easy: {
+    label: 'Easy',
+    cls: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-200 dark:ring-emerald-800',
+    text: 'text-emerald-600 dark:text-emerald-400',
+  },
+  medium: {
+    label: 'Medium',
+    cls: 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 ring-1 ring-amber-200 dark:ring-amber-800',
+    text: 'text-amber-600 dark:text-amber-400',
+  },
+  hard: {
+    label: 'Hard',
+    cls: 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 ring-1 ring-rose-200 dark:ring-rose-800',
+    text: 'text-rose-600 dark:text-rose-400',
+  },
+}
+
+function getCourseLabel(course: string) {
+  return course.trim() || 'General'
+}
+
+function normalizeCourseKey(course: string) {
+  return course.trim().toUpperCase()
+}
+
+function getDifficultyForCourse(course: string, currentCourses: CurrentCourse[]) {
+  const key = normalizeCourseKey(course)
+  return currentCourses.find((currentCourse) => normalizeCourseKey(currentCourse.name) === key)?.difficulty
+}
+
+function normalizeAssignments(input: Assignment[]): Assignment[] {
+  return input.map((assignment) => ({
+    ...assignment,
+    difficulty: assignment.difficulty ?? 'medium',
+  }))
+}
 
 function daysUntil(date: string) {
   const today = new Date(); today.setHours(0, 0, 0, 0)
@@ -35,6 +74,7 @@ export default function AssignmentPanel({ userId, onAssignmentsChange }: { userI
   const [showForm, setShowForm] = useState(false)
   const [filter, setFilter] = useState<'all' | 'pending' | 'done'>('all')
   const [autoSyncUrl, setAutoSyncUrl] = useState<string | null>(null)
+  const [currentCourses, setCurrentCourses] = useState<CurrentCourse[]>([])
 
   // form state
   const [fTitle, setFTitle] = useState('')
@@ -42,6 +82,7 @@ export default function AssignmentPanel({ userId, onAssignmentsChange }: { userI
   const [fDate, setFDate] = useState('')
   const [fTime, setFTime] = useState('')
   const [fType, setFType] = useState<AssignmentType>('homework')
+  const [fDifficulty, setFDifficulty] = useState<CourseDifficulty>('medium')
   const [fError, setFError] = useState('')
 
   // ICS import state
@@ -59,7 +100,8 @@ export default function AssignmentPanel({ userId, onAssignmentsChange }: { userI
       if (!res.ok) return
       const data = await res.json()
       if (cancelled) return
-      setAssignments(data.user.assignments ?? [])
+      setAssignments(normalizeAssignments(data.user.assignments ?? []))
+      setCurrentCourses(data.user.profile?.currentCourses ?? [])
       setAutoSyncUrl(data.user.icsUrl ?? null)
       setLoaded(true)
       setIcsUrl(data.user.icsUrl ?? '')
@@ -80,7 +122,7 @@ export default function AssignmentPanel({ userId, onAssignmentsChange }: { userI
     setAssignments(prev => prev.filter(a => a.id !== id))
   }
 
-  async function syncAssignmentsFromIcs(url: string, mode: 'auto' | 'manual') {
+  const syncAssignmentsFromIcs = useCallback(async (url: string, mode: 'auto' | 'manual') => {
     setIcsStatus('loading')
     setIcsMessage('')
     try {
@@ -108,7 +150,11 @@ export default function AssignmentPanel({ userId, onAssignmentsChange }: { userI
           }
           existingKeys.add(key)
           addedCount += 1
-          nextItems.push({ ...item, id: Date.now() + nextItems.length })
+          nextItems.push({
+            ...item,
+            difficulty: getDifficultyForCourse(item.course, currentCourses) ?? item.difficulty ?? 'medium',
+            id: Date.now() + nextItems.length,
+          })
         }
 
         return addedCount > 0 ? [...prev, ...nextItems] : prev
@@ -126,7 +172,7 @@ export default function AssignmentPanel({ userId, onAssignmentsChange }: { userI
       setIcsStatus('error')
       setIcsMessage(err instanceof Error ? err.message : String(err))
     }
-  }
+  }, [currentCourses])
 
   async function importICS(e: React.FormEvent) {
     e.preventDefault()
@@ -159,12 +205,11 @@ export default function AssignmentPanel({ userId, onAssignmentsChange }: { userI
     return () => {
       cancelled = true
     }
-  }, [autoSyncUrl, userId])
+  }, [autoSyncUrl, userId, currentCourses, syncAssignmentsFromIcs])
 
   function submit(e: React.FormEvent) {
     e.preventDefault()
     if (!fTitle.trim()) { setFError('Title required'); return }
-    if (!fCourse.trim()) { setFError('Course required'); return }
     if (!fDate) { setFError('Due date required'); return }
     setFError('')
     setAssignments(prev => [...prev, {
@@ -173,10 +218,11 @@ export default function AssignmentPanel({ userId, onAssignmentsChange }: { userI
       course: fCourse.trim(),
       dueDate: fDate,
       dueTime: fTime || undefined,
+      difficulty: fDifficulty,
       type: fType,
       completed: false,
     }])
-    setFTitle(''); setFCourse(''); setFDate(''); setFTime(''); setFType('homework')
+    setFTitle(''); setFCourse(''); setFDate(''); setFTime(''); setFType('homework'); setFDifficulty('medium')
     setShowForm(false)
   }
 
@@ -311,7 +357,7 @@ export default function AssignmentPanel({ userId, onAssignmentsChange }: { userI
                 type="text"
                 value={fCourse}
                 onChange={e => { setFCourse(e.target.value); setFError('') }}
-                placeholder="Course (e.g. COM S 311)"
+                placeholder="Course or category (optional)"
                 className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
               <select
@@ -320,6 +366,13 @@ export default function AssignmentPanel({ userId, onAssignmentsChange }: { userI
                 className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               >
                 {TYPES.map(t => <option key={t} value={t}>{TYPE_META[t].label} — {t}</option>)}
+              </select>
+              <select
+                value={fDifficulty}
+                onChange={e => setFDifficulty(e.target.value as CourseDifficulty)}
+                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              >
+                {DIFFICULTIES.map(d => <option key={d} value={d}>{DIFFICULTY_META[d].label} difficulty</option>)}
               </select>
               <input
                 type="date"
@@ -381,17 +434,21 @@ export default function AssignmentPanel({ userId, onAssignmentsChange }: { userI
                           </svg>
                         )}
                       </button>
+                      <div className={`h-10 w-1.5 shrink-0 rounded-full ${a.completed ? 'bg-slate-200 dark:bg-slate-700' : a.difficulty === 'hard' ? 'bg-rose-400 dark:bg-rose-500' : a.difficulty === 'medium' ? 'bg-amber-400 dark:bg-amber-500' : 'bg-emerald-400 dark:bg-emerald-500'}`} />
                       <div className="flex-1 min-w-0">
                         <p className={`text-sm font-medium truncate ${a.completed ? 'line-through text-slate-400 dark:text-slate-600' : 'text-slate-800 dark:text-slate-200'}`}>
                           {a.title}
                         </p>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-xs font-mono text-slate-400 dark:text-slate-500">{a.course}</span>
+                        <div className="mt-0.5 flex items-center gap-2">
+                          <span className={`text-xs font-mono ${a.completed ? 'text-slate-400 dark:text-slate-600' : DIFFICULTY_META[a.difficulty].text}`}>{getCourseLabel(a.course)}</span>
                           {a.dueTime && <span className="text-xs text-slate-400 dark:text-slate-600">· {a.dueTime}</span>}
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {!a.completed && <DueBadge dueDate={a.dueDate} />}
+                        <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md ${DIFFICULTY_META[a.difficulty].cls}`}>
+                          {DIFFICULTY_META[a.difficulty].label}
+                        </span>
                         <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md ${TYPE_META[a.type].cls}`}>
                           {TYPE_META[a.type].label}
                         </span>
@@ -437,7 +494,7 @@ export default function AssignmentPanel({ userId, onAssignmentsChange }: { userI
                       <div className="flex-1 min-w-0">
                         <p className="text-sm text-slate-400 dark:text-slate-600 truncate">{a.title}</p>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-xs font-mono text-slate-300 dark:text-slate-700">{a.course}</span>
+                          <span className={`text-xs font-mono ${a.difficulty === 'hard' ? 'text-rose-400/80 dark:text-rose-500/70' : a.difficulty === 'medium' ? 'text-amber-500/80 dark:text-amber-500/70' : 'text-emerald-500/80 dark:text-emerald-500/70'}`}>{getCourseLabel(a.course)}</span>
                           <span className="text-xs text-slate-300 dark:text-slate-700">·</span>
                           <span className="text-xs text-slate-300 dark:text-slate-700">
                             {new Date(a.dueDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
@@ -445,6 +502,9 @@ export default function AssignmentPanel({ userId, onAssignmentsChange }: { userI
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
+                        <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md opacity-60 ${DIFFICULTY_META[a.difficulty].cls}`}>
+                          {DIFFICULTY_META[a.difficulty].label}
+                        </span>
                         <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md opacity-50 ${TYPE_META[a.type].cls}`}>
                           {TYPE_META[a.type].label}
                         </span>

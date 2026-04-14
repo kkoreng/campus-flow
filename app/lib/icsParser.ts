@@ -93,6 +93,7 @@ export function parseICS(text: string): ParsedAssignment[] {
         course,
         dueDate: date,
         dueTime: time,
+        difficulty: 'medium',
         type: detectType(summary, categories),
         completed: false,
       })

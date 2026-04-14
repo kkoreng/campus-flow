@@ -46,6 +46,7 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json() as AnalyzeRequest
   const { profile, assignments } = body
+  const getCourseLabel = (course: string) => course.trim() || 'General'
 
   const today = new Date().toISOString().split('T')[0]
 
@@ -63,12 +64,17 @@ export async function POST(req: NextRequest) {
     ? upcoming.map(a => {
         const daysLeft = Math.ceil((new Date(a.dueDate).getTime() - new Date(today).getTime()) / 86400000)
         const when = daysLeft === 0 ? 'due today' : `due in ${daysLeft} days`
-        return `- [${a.type.toUpperCase()}] "${a.title}" — ${a.course} — ${when}${a.dueTime ? ` at ${a.dueTime}` : ''}`
+        return `- [${a.type.toUpperCase()}] "${a.title}" — ${getCourseLabel(a.course)} — ${when}${a.dueTime ? ` at ${a.dueTime}` : ''}`
+        + ` — difficulty: ${a.difficulty}`
       }).join('\n')
     : 'No upcoming assignments.'
 
   const heavyCourses = upcoming
-    .reduce<Record<string, number>>((acc, a) => { acc[a.course] = (acc[a.course] ?? 0) + 1; return acc }, {})
+    .reduce<Record<string, number>>((acc, a) => {
+      const course = getCourseLabel(a.course)
+      acc[course] = (acc[course] ?? 0) + 1
+      return acc
+    }, {})
   const workloadSummary = Object.entries(heavyCourses)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 3)
