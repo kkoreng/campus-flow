@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import type { Assignment, UserProfile } from '../lib/types'
-import type { InsightsResponse } from '../api/insights/route'
+import type { InsightsResponse, TypeStat } from '../api/insights/route'
 
 interface Props {
   userId: string
@@ -143,6 +143,17 @@ export default function InsightsPanel({ userId, profile }: Props) {
     width: difficultyTotal > 0 ? `${(item.count / difficultyTotal) * 100}%` : '0%',
   }))
 
+  const TYPE_META: Record<string, { label: string; bar: string }> = {
+    homework: { label: 'Homework', bar: 'bg-blue-500' },
+    exam:     { label: 'Exam',     bar: 'bg-rose-500' },
+    project:  { label: 'Project',  bar: 'bg-violet-500' },
+    quiz:     { label: 'Quiz',     bar: 'bg-amber-400' },
+    lab:      { label: 'Lab',      bar: 'bg-emerald-500' },
+    other:    { label: 'Other',    bar: 'bg-slate-400' },
+  }
+
+  const maxWeekCount = Math.max(...(insights?.weeklyWorkload ?? []).map(w => w.count), 1)
+
   return (
     <div className="space-y-8">
 
@@ -180,7 +191,12 @@ export default function InsightsPanel({ userId, profile }: Props) {
 
       {/* No data state */}
       {total === 0 && (
-        <p className="text-sm text-slate-400 dark:text-slate-500">Add assignments to generate your personal insights.</p>
+        <div className="rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/35 px-6 py-10 text-center">
+          <p className="text-sm font-medium text-slate-600 dark:text-slate-400">No data to analyze yet.</p>
+          <p className="mt-2 text-xs text-slate-400 dark:text-slate-500 leading-relaxed">
+            Once you add assignments, you'll see completion rate, course health, and workload forecasts here.
+          </p>
+        </div>
       )}
 
       {/* Loading skeleton */}
@@ -383,6 +399,82 @@ export default function InsightsPanel({ userId, profile }: Props) {
               </div>
             </div>
           )}
+
+          {/* Weekly workload + On-time rate + Type breakdown */}
+          <div className="grid gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,0.6fr)]">
+
+            {/* Weekly workload chart */}
+            {insights.weeklyWorkload?.some(w => w.count > 0) && (
+              <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-5 dark:border-slate-800 dark:bg-slate-900/35">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Upcoming Workload</p>
+                <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500 mb-5">assignments due per week (next 6 weeks)</p>
+                <div className="flex items-end gap-2 h-28">
+                  {insights.weeklyWorkload.map((w) => {
+                    const heightPct = maxWeekCount > 0 ? (w.count / maxWeekCount) * 100 : 0
+                    const isHeavy = w.count >= 4
+                    const isMedium = w.count >= 2 && w.count < 4
+                    return (
+                      <div key={w.weekStart} className="flex flex-col items-center gap-1.5 flex-1 min-w-0">
+                        {w.count > 0 && (
+                          <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400">{w.count}</p>
+                        )}
+                        <div className="w-full rounded-t-md" style={{ height: `${Math.max(heightPct, w.count > 0 ? 8 : 0)}%` }}>
+                          <div
+                            className={`w-full h-full rounded-t-md ${isHeavy ? 'bg-rose-400 dark:bg-rose-500' : isMedium ? 'bg-amber-400 dark:bg-amber-400' : 'bg-blue-400 dark:bg-blue-500'}`}
+                          />
+                        </div>
+                        <p className="text-[9px] text-slate-400 dark:text-slate-500 truncate w-full text-center">{w.label}</p>
+                      </div>
+                    )
+                  })}
+                </div>
+                <div className="mt-3 flex items-center gap-4 text-[10px] text-slate-400 dark:text-slate-500">
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-blue-400" />Light</span>
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-amber-400" />Moderate</span>
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-rose-400" />Heavy</span>
+                </div>
+              </div>
+            )}
+
+            {/* On-time rate + Type breakdown */}
+            <div className="space-y-4">
+              {insights.onTimeRate !== null && insights.onTimeRate !== undefined && (
+                <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-5 dark:border-slate-800 dark:bg-slate-900/35">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">On-Time Rate</p>
+                  <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-slate-900 dark:text-white">{insights.onTimeRate}%</p>
+                  <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">marked done before deadline</p>
+                  <div className="mt-3 h-2 rounded-full bg-slate-200 dark:bg-slate-700">
+                    <div
+                      className={`h-2 rounded-full ${insights.onTimeRate >= 80 ? 'bg-emerald-500' : insights.onTimeRate >= 50 ? 'bg-amber-400' : 'bg-rose-500'}`}
+                      style={{ width: `${insights.onTimeRate}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {insights.typeStats?.length > 0 && (
+                <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-5 dark:border-slate-800 dark:bg-slate-900/35">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400 mb-4">By Type</p>
+                  <div className="space-y-3">
+                    {insights.typeStats.map((t: TypeStat) => {
+                      const meta = TYPE_META[t.type] ?? { label: t.type, bar: 'bg-slate-400' }
+                      return (
+                        <div key={t.type}>
+                          <div className="flex items-center justify-between mb-1">
+                            <p className="text-xs font-medium text-slate-600 dark:text-slate-300">{meta.label}</p>
+                            <p className="text-[11px] text-slate-400 dark:text-slate-500">{t.done}/{t.total}</p>
+                          </div>
+                          <div className="h-1.5 rounded-full bg-slate-200 dark:bg-slate-700">
+                            <div className={`h-1.5 rounded-full ${meta.bar}`} style={{ width: `${t.rate}%` }} />
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
 
           {/* Weekly habit */}
           {insights.weeklyHabit && (

@@ -233,11 +233,27 @@ export default function ProfileSettingsPanel({
       </div>
 
       <div className="mt-3">
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className="text-xs text-slate-400 dark:text-slate-500">Canvas ICS URL</span>
+          <div className="relative group">
+            <div className="w-4 h-4 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center cursor-default">
+              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">?</span>
+            </div>
+            <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2.5 shadow-lg text-xs text-slate-600 dark:text-slate-300 leading-relaxed opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-10">
+              <p className="font-semibold text-slate-700 dark:text-slate-200 mb-1">How to find your Canvas ICS URL</p>
+              <ol className="space-y-0.5 list-decimal list-inside text-slate-500 dark:text-slate-400">
+                <li>Go to Canvas → Calendar</li>
+                <li>Click <span className="font-medium text-slate-600 dark:text-slate-300">Calendar Feed</span> at the bottom right</li>
+                <li>Copy the URL and paste it here</li>
+              </ol>
+            </div>
+          </div>
+        </div>
         <input
           type="url"
           value={ics}
           onChange={(e) => { setIcs(e.target.value); setError(''); setStatus('') }}
-          placeholder="Canvas ICS URL (optional)"
+          placeholder="https://canvas.instructure.com/feeds/calendars/..."
           className="w-full rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 font-mono text-sm text-slate-900 dark:text-slate-100 placeholder:font-sans placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>

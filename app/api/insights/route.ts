@@ -11,6 +11,19 @@ export interface CourseHealth {
   note: string
 }
 
+export interface TypeStat {
+  type: string
+  total: number
+  done: number
+  rate: number
+}
+
+export interface WeekBucket {
+  label: string   // e.g. "Apr 14"
+  count: number
+  weekStart: string // ISO date
+}
+
 export interface InsightsResponse {
   profileHeadline: string
   studyProfile: string
@@ -20,6 +33,12 @@ export interface InsightsResponse {
   courseHealth: CourseHealth[]
   weeklyHabit: string
   topRecommendation: string
+  // computed stats (not from AI)
+  onTimeRate: number | null
+  typeStats: TypeStat[]
+  weeklyWorkload: WeekBucket[]
+  earnedCredits: number
+  totalAssignments: number
 }
 
 export interface InsightsRequest {
@@ -75,6 +94,28 @@ export async function POST(req: NextRequest) {
     const done = list.filter(a => a.completed).length
     return { type, total: list.length, done, rate: Math.round((done / list.length) * 100) }
   }).filter(Boolean)
+
+  // Weekly workload — next 6 weeks (Mon-Sun buckets)
+  const weeklyWorkload: WeekBucket[] = []
+  const todayDate = new Date(today)
+  const dayOfWeek = todayDate.getDay() // 0=Sun
+  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek
+  const thisMonday = new Date(todayDate)
+  thisMonday.setDate(todayDate.getDate() + mondayOffset)
+  for (let w = 0; w < 6; w++) {
+    const weekStart = new Date(thisMonday)
+    weekStart.setDate(thisMonday.getDate() + w * 7)
+    const weekEnd = new Date(weekStart)
+    weekEnd.setDate(weekStart.getDate() + 6)
+    const startStr = weekStart.toISOString().split('T')[0]
+    const endStr = weekEnd.toISOString().split('T')[0]
+    const count = upcomingList.filter(a => a.dueDate >= startStr && a.dueDate <= endStr).length
+    weeklyWorkload.push({
+      label: weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      count,
+      weekStart: startStr,
+    })
+  }
 
   // Difficulty of overdue courses
   const courseDifficultyMap: Record<string, string> = {}
@@ -180,6 +221,12 @@ Return ONLY valid JSON with this exact shape:
       }
       return ch
     })
+    // Attach computed stats
+    parsed.onTimeRate = onTimeRate
+    parsed.typeStats = typeStats as TypeStat[]
+    parsed.weeklyWorkload = weeklyWorkload
+    parsed.earnedCredits = earnedCredits
+    parsed.totalAssignments = total
     return NextResponse.json(parsed)
   } catch {
     return NextResponse.json({ error: 'Failed to parse AI response.' }, { status: 500 })

@@ -52,6 +52,8 @@ export default function EventPanel({ userId, profile, onProfileChange }: Props) 
   const [note, setNote] = useState(profile.dailyNotes?.[toDateKey(new Date())] ?? '')
   const [saving, setSaving] = useState(false)
   const [status, setStatus] = useState('')
+  const [quickTitle, setQuickTitle] = useState('')
+  const [addingAssignment, setAddingAssignment] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -125,6 +127,28 @@ export default function EventPanel({ userId, profile, onProfileChange }: Props) 
 
   function moveMonth(direction: -1 | 1) {
     setMonth((current) => new Date(current.getFullYear(), current.getMonth() + direction, 1))
+  }
+
+  async function quickAddAssignment() {
+    if (!quickTitle.trim()) return
+    const newAssignment: Assignment = {
+      id: Date.now(),
+      title: quickTitle.trim(),
+      course: '',
+      dueDate: selectedDate,
+      difficulty: 'medium',
+      type: 'homework',
+      completed: false,
+    }
+    const next = [...assignments, newAssignment]
+    setAssignments(next)
+    setQuickTitle('')
+    setAddingAssignment(false)
+    await fetch(`/api/users/${userId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ assignments: next }),
+    })
   }
 
   return (
@@ -226,7 +250,35 @@ export default function EventPanel({ userId, profile, onProfileChange }: Props) 
           <h3 className="mt-2 text-xl font-semibold tracking-[-0.03em] text-slate-900 dark:text-white">{selectedDateLabel}</h3>
 
           <div className="mt-5">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">Assignments</p>
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">Assignments</p>
+              <button
+                onClick={() => { setAddingAssignment(v => !v); setQuickTitle('') }}
+                className="text-[11px] text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors"
+              >
+                {addingAssignment ? 'Cancel' : '+ Add'}
+              </button>
+            </div>
+            {addingAssignment && (
+              <div className="mt-2 flex gap-2">
+                <input
+                  autoFocus
+                  type="text"
+                  value={quickTitle}
+                  onChange={e => setQuickTitle(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') void quickAddAssignment(); if (e.key === 'Escape') setAddingAssignment(false) }}
+                  placeholder="Assignment title…"
+                  className="flex-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                <button
+                  onClick={() => void quickAddAssignment()}
+                  disabled={!quickTitle.trim()}
+                  className="rounded-lg bg-slate-900 dark:bg-white px-3 py-2 text-sm font-medium text-white dark:text-slate-900 disabled:opacity-30"
+                >
+                  Add
+                </button>
+              </div>
+            )}
             {selectedAssignments.length > 0 ? (
               <div className="mt-3 space-y-2">
                 {selectedAssignments.map((assignment) => (
@@ -245,7 +297,7 @@ export default function EventPanel({ userId, profile, onProfileChange }: Props) 
                 ))}
               </div>
             ) : (
-              <p className="mt-3 text-sm text-slate-400 dark:text-slate-500">No assignments due.</p>
+              !addingAssignment && <p className="mt-3 text-sm text-slate-400 dark:text-slate-500">No assignments due.</p>
             )}
           </div>
 

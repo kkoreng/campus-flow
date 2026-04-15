@@ -5,7 +5,7 @@ import type { Assignment, AssignmentType, CourseDifficulty, CurrentCourse } from
 import { parseICS } from '../lib/icsParser'
 
 const TYPE_META: Record<AssignmentType, { label: string; cls: string }> = {
-  homework: { label: 'HW',      cls: 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 ring-1 ring-blue-200 dark:ring-blue-800' },
+  homework: { label: 'Homework', cls: 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 ring-1 ring-blue-200 dark:ring-blue-800' },
   exam:     { label: 'Exam',    cls: 'bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 ring-1 ring-rose-200 dark:ring-rose-800' },
   project:  { label: 'Project', cls: 'bg-violet-50 dark:bg-violet-950/60 text-violet-600 dark:text-violet-400 ring-1 ring-violet-200 dark:ring-violet-800' },
   quiz:     { label: 'Quiz',    cls: 'bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 ring-1 ring-amber-200 dark:ring-amber-800' },
@@ -68,7 +68,7 @@ function DueBadge({ dueDate }: { dueDate: string }) {
   return null
 }
 
-export default function AssignmentPanel({ userId, onAssignmentsChange }: { userId: string; onAssignmentsChange?: () => void }) {
+export default function AssignmentPanel({ userId, icsUrl: icsUrlProp, onAssignmentsChange }: { userId: string; icsUrl?: string; onAssignmentsChange?: () => void }) {
   const [assignments, setAssignments] = useState<Assignment[]>([])
   const [loaded, setLoaded] = useState(false)
   const [showForm, setShowForm] = useState(false)
@@ -189,6 +189,15 @@ export default function AssignmentPanel({ userId, onAssignmentsChange }: { userI
       body: JSON.stringify({ assignments }),
     }).then(() => onAssignmentsChange?.())
   }, [assignments, loaded, userId, onAssignmentsChange])
+
+  // Sync autoSyncUrl with prop changes (e.g. user connects Canvas ICS while panel is mounted)
+  useEffect(() => {
+    if (!loaded) return
+    if (icsUrlProp !== undefined) {
+      setAutoSyncUrl(icsUrlProp || null)
+      setIcsUrl(icsUrlProp)
+    }
+  }, [icsUrlProp, loaded])
 
   useEffect(() => {
     if (!autoSyncUrl) return
@@ -342,52 +351,78 @@ export default function AssignmentPanel({ userId, onAssignmentsChange }: { userI
 
       {/* Add form */}
       {showForm && (
-        <div className="rounded-[24px] border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/50 p-4">
-          <form onSubmit={submit} className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
+        <div className="rounded-[24px] border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/50 p-5">
+          <form onSubmit={submit} className="space-y-4">
+            {/* Title */}
+            <div>
+              <label className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500 mb-1.5">Title</label>
               <input
                 autoFocus
                 type="text"
                 value={fTitle}
                 onChange={e => { setFTitle(e.target.value); setFError('') }}
-                placeholder="Assignment title"
-                className="col-span-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              />
-              <input
-                type="text"
-                value={fCourse}
-                onChange={e => { setFCourse(e.target.value); setFError('') }}
-                placeholder="Course or category (optional)"
-                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              />
-              <select
-                value={fType}
-                onChange={e => setFType(e.target.value as AssignmentType)}
-                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              >
-                {TYPES.map(t => <option key={t} value={t}>{TYPE_META[t].label} — {t}</option>)}
-              </select>
-              <select
-                value={fDifficulty}
-                onChange={e => setFDifficulty(e.target.value as CourseDifficulty)}
-                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              >
-                {DIFFICULTIES.map(d => <option key={d} value={d}>{DIFFICULTY_META[d].label} difficulty</option>)}
-              </select>
-              <input
-                type="date"
-                value={fDate}
-                min={today}
-                onChange={e => { setFDate(e.target.value); setFError('') }}
-                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              />
-              <input
-                type="time"
-                value={fTime}
-                onChange={e => setFTime(e.target.value)}
-                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                placeholder="e.g. Homework 3, Midterm Exam"
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
             </div>
+
+            {/* Course + Type */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500 mb-1.5">Course</label>
+                <input
+                  type="text"
+                  value={fCourse}
+                  onChange={e => { setFCourse(e.target.value); setFError('') }}
+                  placeholder="e.g. COM S 227"
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500 mb-1.5">Type</label>
+                <select
+                  value={fType}
+                  onChange={e => setFType(e.target.value as AssignmentType)}
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                >
+                  {TYPES.map(t => <option key={t} value={t}>{TYPE_META[t].label}</option>)}
+                </select>
+              </div>
+            </div>
+
+            {/* Due date + Time + Difficulty */}
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <label className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500 mb-1.5">Due date</label>
+                <input
+                  type="date"
+                  value={fDate}
+                  min={today}
+                  onChange={e => { setFDate(e.target.value); setFError('') }}
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500 mb-1.5">Time <span className="normal-case font-normal">(optional)</span></label>
+                <input
+                  type="time"
+                  value={fTime}
+                  onChange={e => setFTime(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500 mb-1.5">Difficulty</label>
+                <select
+                  value={fDifficulty}
+                  onChange={e => setFDifficulty(e.target.value as CourseDifficulty)}
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                >
+                  {DIFFICULTIES.map(d => <option key={d} value={d}>{DIFFICULTY_META[d].label}</option>)}
+                </select>
+              </div>
+            </div>
+
             {fError && <p className="text-xs text-rose-500">{fError}</p>}
             <div className="flex gap-2 pt-1">
               <button type="submit" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors">

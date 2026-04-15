@@ -415,7 +415,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          {tab === 'assignments' && <AssignmentPanel userId={user.id} onAssignmentsChange={handleAssignmentsChange} />}
+          {tab === 'assignments' && <AssignmentPanel userId={user.id} icsUrl={icsUrl} onAssignmentsChange={handleAssignmentsChange} />}
           {tab === 'events' && <EventPanel userId={user.id} profile={profile} onProfileChange={(next) => setProfile(next)} />}
           {tab === 'insights' && <InsightsPanel userId={user.id} profile={profile} />}
 

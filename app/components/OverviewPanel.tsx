@@ -160,32 +160,46 @@ export default function OverviewPanel({ userId, profile, refreshTrigger, onNavig
       {!analyzing && analysis && (
         <div className="space-y-6">
 
-          {/* Focus Now — hero (top) */}
+          {/* Focus Now — hero */}
           {analysis.focusNow && (
-            <div className="bg-slate-900 dark:bg-white rounded-xl p-6">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-blue-400 dark:text-blue-600 mb-4">Focus now</p>
-              <p className="text-2xl font-semibold tracking-[-0.03em] text-white dark:text-slate-900 leading-snug">
-                {analysis.focusNow.title}
-              </p>
-              <p className="mt-1.5 text-sm text-slate-400 dark:text-slate-500">{analysis.focusNow.course}</p>
+            <div className="relative overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#1a1f2e_0%,#0f1729_100%)] dark:bg-[linear-gradient(135deg,#f8fafc_0%,#e2e8f0_100%)] p-6">
+              {/* Accent glow */}
+              <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-blue-500/10 blur-3xl" />
+              <div className="pointer-events-none absolute -bottom-8 -left-8 h-40 w-40 rounded-full bg-teal-500/10 blur-3xl" />
 
-              <div className="mt-5 flex items-center gap-5">
-                <div>
-                  <p className="text-[10px] uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400 mb-1">Deadline</p>
-                  <p className="text-sm font-semibold text-rose-400 dark:text-rose-500">{analysis.focusNow.deadline}</p>
+              {/* Label */}
+              <div className="relative flex items-center justify-between mb-5">
+                <div className="flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-400 dark:bg-blue-500 animate-pulse" />
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-400 dark:text-blue-600">Focus now</p>
                 </div>
-                <div className="w-px h-8 bg-slate-700 dark:bg-slate-300" />
-                <div>
-                  <p className="text-[10px] uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400 mb-1">Est. time</p>
-                  <p className="text-sm font-semibold text-white dark:text-slate-900">{analysis.focusNow.timeEstimate}</p>
-                </div>
+                <span className="rounded-full bg-white/8 dark:bg-black/8 border border-white/10 dark:border-black/10 px-2.5 py-1 text-[11px] font-medium text-slate-300 dark:text-slate-600">
+                  {analysis.focusNow.timeEstimate}
+                </span>
               </div>
 
+              {/* Title */}
+              <div className="relative">
+                <div className="inline-flex items-center gap-2 rounded-lg bg-rose-500/15 border border-rose-500/20 px-3 py-1.5 mb-3">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="text-rose-400 dark:text-rose-500 shrink-0">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  <p className="text-xs font-semibold text-rose-400 dark:text-rose-500">{analysis.focusNow.deadline}</p>
+                </div>
+                <p className="text-[1.6rem] font-semibold tracking-[-0.04em] text-white dark:text-slate-900 leading-[1.2] mb-3">
+                  {analysis.focusNow.title}
+                </p>
+                <span className="inline-block rounded-md bg-white/10 dark:bg-black/8 border border-white/10 dark:border-black/10 px-2.5 py-1 text-[11px] font-medium text-slate-300 dark:text-slate-600">
+                  {analysis.focusNow.course}
+                </span>
+              </div>
+
+              {/* After this */}
               {analysis.focusNow.nextUp && (
-                <div className="mt-5 pt-4 border-t border-slate-700/60 dark:border-slate-300/40">
-                  <p className="text-xs text-slate-400 dark:text-slate-500">
-                    <span className="text-slate-500 dark:text-slate-400">After this →</span> {analysis.focusNow.nextUp}
-                  </p>
+                <div className="relative mt-5 pt-4 border-t border-white/8 dark:border-black/8 flex items-start gap-2">
+                  <span className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400 mt-px">After this</span>
+                  <span className="text-slate-400 dark:text-slate-500 text-[10px] mt-px">→</span>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 leading-relaxed">{analysis.focusNow.nextUp}</p>
                 </div>
               )}
             </div>

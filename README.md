@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CampusFlow
+### **2026 Applied AI Challenge**
 
-## Getting Started
+***
 
-First, run the development server:
+``📍 Iowa State University``
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+> **2026 Applied AI Challenge — AI Assisted Coding**
+> This project was built entirely through AI-assisted coding. **No code** was written manually.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+***
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+College students often struggle with managing assignments, planning their workload, and prioritizing what truly matters each day, often leading to stress and inefficiency.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+CampusFlow addresses this challenge by providing an AI-powered academic dashboard that centralizes tasks, tracks progress in real time, and simplifies day-to-day planning.
 
-## Learn More
+Unlike traditional planners, the system analyzes user behavior and performance patterns to deliver personalized feedback and generate actionable daily plans.
 
-To learn more about Next.js, take a look at the following resources:
+By helping students focus on the right tasks at the right time, CampusFlow aims to improve productivity, reduce overwhelm, and support more effective academic decision-making.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+***
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Tech Stack
 
-## Deploy on Vercel
+- **Framework** — Next.js 15 (App Router)
+- **Styling** — Tailwind CSS
+- **AI (in-app)** — GPT-4o mini via OpenRouter
+- **Storage** — File-based user store
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+***
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### AI Tools Used in Development
+
+- **Claude Code** 
+- **Codex**
+
