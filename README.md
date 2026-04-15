@@ -34,8 +34,8 @@ This project was built entirely through AI-assisted coding.<br>
 
 ## Contributors
 
-- **Kiwan Jeon** — Project Lead  
-  https://github.com/kwjeon06
+- **Kiwan Jeon** — Project Lead<br>
+  [GitHub](https://github.com/kwjeon06)
 
-- **Heeryun Cho** — AI-assisted Development
-  https://github.com/kkoreng
+- **Heeryun Cho** — AI-assisted Development<br>
+  [GitHub](https://github.com/kkoreng)
