@@ -1,12 +1,14 @@
 # CampusFlow
 ### **2026 Applied AI Challenge**
 
+---
 
 ``📍 Iowa State University``
 
 > **2026 Applied AI Challenge — AI Assisted Coding**
 > This project was built entirely through AI-assisted coding. **No code** was written manually.
 
+---
 
 College students often struggle with managing assignments, planning their workload, and prioritizing what truly matters each day, often leading to stress and inefficiency.
 
@@ -16,6 +18,7 @@ Unlike traditional planners, the system analyzes user behavior and performance p
 
 By helping students focus on the right tasks at the right time, CampusFlow aims to improve productivity, reduce overwhelm, and support more effective academic decision-making.
 
+---
 
 ### Tech Stack
 
@@ -24,6 +27,7 @@ By helping students focus on the right tasks at the right time, CampusFlow aims 
 - **AI (in-app)** — GPT-4o mini via OpenRouter
 - **Storage** — File-based user store
 
+---
 
 ### AI Tools Used in Development
 
