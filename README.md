@@ -1,9 +1,9 @@
 # CampusFlow
 ``📍 Iowa State University``
 ### **2026 Applied AI Challenge**
-**2026 Applied AI Challenge — AI Assisted Coding**
-This project was built entirely through AI-assisted coding. 
-**No code** was written manually.
+**AI Assisted Coding**<br>
+This project was built entirely through AI-assisted coding.<br>
+**No code** was written manually.<br>
 
 
 > College students often struggle with managing assignments, planning their workload, and prioritizing what truly matters  each day, often leading to stress and inefficiency.
