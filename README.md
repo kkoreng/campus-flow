@@ -30,3 +30,9 @@ This project was built entirely through AI-assisted coding.<br>
 - **Claude Code** 
 - **Codex**
 
+
+
+## Contributors
+
+- [Heeryun Cho](https://github.com/kkoreng)
+- [Kiwan Jeon](https://github.com/kwjeon06)
